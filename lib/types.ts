@@ -22,16 +22,30 @@ export type Game = {
   stadium: string;
 };
 
+// StandingItem は既存のままでOK
 export type StandingItem = {
+  league: 'セ・リーグ' | 'パ・リーグ';
   rank: number;
-  team: Team;
-  played: number; // 試合数
-  win: number;
-  loss: number;
-  draw: number;
-  gamesBack: string; // ゲーム差 ("-" or "1.5")
-  pct: string;       // 勝率 (".580")
+  teamShort: string;
+  teamName: string;
+  wins: number;
+  losses: number;
+  draws: number;
+  winPct: number;
+  gb: string;
+  recent: string;
+  streak: string;
+  runDiff: number;
+  runsScored: number;
+  runsAllowed: number;
 };
+
+// ★ 追加：セパをまとめた型
+export type StandingsByLeague = {
+  central: StandingItem[];  // セ・リーグ
+  pacific: StandingItem[];  // パ・リーグ
+};
+
 
 export type Article = {
   id: string;
