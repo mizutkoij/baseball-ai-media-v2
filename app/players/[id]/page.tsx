@@ -234,58 +234,7 @@ export default function PlayerDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* 選手情報セクション */}
-        <div className="bg-slate-800/50 border border-slate-700 border-t-0 rounded-b-md shadow-sm p-4 mb-6">
-          <h2 className="text-xs font-bold text-slate-300 mb-3">選手情報</h2>
-
-          <div className="space-y-3 text-sm">
-            {/* 基本情報を1行にまとめる */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-300">
-              {/* TODO: 実際のドラフト情報をここに挿入 */}
-              <div className="flex items-center gap-2">
-                <span className="text-slate-400 text-xs">ドラフト:</span>
-                <span className="text-slate-500">[2020年 3位]</span>
-              </div>
-              <span className="text-slate-600">|</span>
-              {/* TODO: 実際の出身地をここに挿入 */}
-              <div className="flex items-center gap-2">
-                <span className="text-slate-400 text-xs">出身:</span>
-                <span className="text-slate-500">[大阪府]</span>
-              </div>
-            </div>
-
-            {/* 経歴 */}
-            <div className="flex items-start gap-2 text-xs">
-              <span className="text-slate-400 whitespace-nowrap">経歴:</span>
-              {/* TODO: 実際の経歴をここに挿入 */}
-              <span className="text-slate-500">[高校名] → [大学名/社会人チーム名]</span>
-            </div>
-
-            {/* SNSリンク */}
-            <div className="flex items-center gap-3 pt-1">
-              <span className="text-slate-400 text-xs">SNS:</span>
-              {/* TODO: 実際のSNSリンクをここに挿入 */}
-              <a
-                href="#"
-                className="text-blue-400 hover:text-blue-300 transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Twitter"
-              >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="text-pink-400 hover:text-pink-300 transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Instagram"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </div>
+        {/* 選手情報セクション - プロフィールデータがないため非表示 */}
 
         {/* 年度選択 */}
         <div className="bg-slate-800/50 border border-slate-700 rounded-t-md shadow-sm p-3 mb-0">
