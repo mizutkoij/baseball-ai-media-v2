@@ -50,7 +50,7 @@ export const TODAYS_GAMES: Game[] = [
 ];
 
 // 順位表（セ・リーグ）
-export const STANDINGS_CENTRAL: StandingItem[] = [
+export const STANDINGS: StandingItem[] = [
   { rank: 1, team: TEAMS.T, played: 60, win: 35, loss: 22, draw: 3, gamesBack: '-', pct: '.614' },
   { rank: 2, team: TEAMS.G, played: 60, win: 32, loss: 25, draw: 3, gamesBack: '3.0', pct: '.561' },
   { rank: 3, team: TEAMS.DB, played: 59, win: 30, loss: 27, draw: 2, gamesBack: '2.0', pct: '.526' },
