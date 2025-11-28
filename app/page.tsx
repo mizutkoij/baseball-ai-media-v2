@@ -1,71 +1,87 @@
-import Link from "next/link";
-import { Trophy, BarChart3, Calendar } from "lucide-react";
+// app/page.tsx
+import { Scoreboard } from '@/components/home/Scoreboard';
+import { StandingsWidget } from '@/components/home/StandingsWidget';
+import { NewsFeed } from '@/components/home/NewsFeed';
+import {
+  TODAYS_GAMES,
+  STANDINGS_CENTRAL,
+  LEADERS,
+  ARTICLES
+} from '@/lib/mockData';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-6">
-            ⚾ Baseball AI Media
-          </h1>
-          <p className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
-            NPBデータ分析プラットフォーム v2
-          </p>
-          <p className="text-sm text-slate-400">
-            Vercel完結型・クリーンアーキテクチャ
-          </p>
+    <main className="min-h-screen bg-[#f3f4f6]">
+
+      {/* 1. スコアボード (Game Status) */}
+      <Scoreboard games={TODAYS_GAMES} />
+
+      <div className="container mx-auto max-w-6xl mt-6 px-4 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        {/* === 左カラム: メインコンテンツ (幅広) === */}
+        <div className="lg:col-span-8 space-y-8">
+
+          {/* ヒーローセクション: 今一番読ませたい記事 */}
+          <section className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+            <div className="aspect-video w-full bg-gray-200 relative flex items-center justify-center text-gray-400">
+              <span className="font-bold">Feature Image (16:9)</span>
+            </div>
+            <div className="p-5">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2 leading-tight">
+                2025年プロ野球、AI分析が予測する「後半戦のキーマン」とは？
+              </h2>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                データスタジアムの数値を基に、セイバーメトリクス指標「wRC+」が急上昇している選手をピックアップ。意外な伏兵がチームの命運を握っているかもしれない。
+              </p>
+            </div>
+          </section>
+
+          {/* 最新ニュースリスト */}
+          <section>
+            <div className="flex items-center justify-between mb-3 border-l-4 border-blue-700 pl-3">
+              <h2 className="text-lg font-bold text-gray-800">最新記事</h2>
+              <a href="#" className="text-xs text-blue-600 font-bold hover:underline">記事一覧へ »</a>
+            </div>
+            <NewsFeed articles={ARTICLES} />
+          </section>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <Link
-            href="/players"
-            className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg p-6 hover:bg-black/30 transition-all"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <Trophy className="w-6 h-6 text-blue-500" />
-              <h3 className="text-lg font-semibold text-white">選手データ</h3>
-            </div>
-            <p className="text-slate-400 text-sm">
-              選手成績・統計情報
-            </p>
-          </Link>
+        {/* === 右カラム: データサイドバー (幅狭) === */}
+        <aside className="lg:col-span-4 space-y-6">
 
-          <Link
-            href="/games"
-            className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg p-6 hover:bg-black/30 transition-all"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <Calendar className="w-6 h-6 text-purple-500" />
-              <h3 className="text-lg font-semibold text-white">試合情報</h3>
-            </div>
-            <p className="text-slate-400 text-sm">
-              試合結果・スケジュール
-            </p>
-          </Link>
+          {/* 順位表 */}
+          <StandingsWidget items={STANDINGS_CENTRAL} />
 
-          <Link
-            href="/stats"
-            className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg p-6 hover:bg-black/30 transition-all"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <BarChart3 className="w-6 h-6 text-green-500" />
-              <h3 className="text-lg font-semibold text-white">統計分析</h3>
+          {/* 個人成績リーダーズ (簡易版) */}
+          <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
+            <div className="bg-gray-100 px-3 py-2 border-b border-gray-200">
+              <h3 className="font-bold text-sm text-gray-700">打率ランキング (セ)</h3>
             </div>
-            <p className="text-slate-400 text-sm">
-              高度な分析指標
-            </p>
-          </Link>
-        </div>
+            <ul className="divide-y divide-gray-100 text-sm">
+              {LEADERS.batting.map((player) => (
+                <li key={player.rank} className="flex justify-between items-center px-3 py-2 hover:bg-gray-50">
+                  <div className="flex items-center space-x-3">
+                    <span className="font-mono font-bold text-gray-400 w-4">{player.rank}</span>
+                    <span className="text-gray-800">{player.player}</span>
+                    <span className="text-xs text-gray-500">({player.team})</span>
+                  </div>
+                  <span className="font-mono font-bold text-blue-700">{player.value}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="p-2 text-right bg-gray-50 border-t border-gray-200">
+              <a href="#" className="text-xs text-blue-600 hover:underline">個人成績一覧 »</a>
+            </div>
+          </div>
 
-        {/* Status */}
-        <div className="text-center text-slate-400 text-sm mt-16">
-          <p>🚀 Next.js 15 + Vercel Postgres + Prisma</p>
-          <p className="mt-2">シンプル・高速・スケーラブル</p>
-        </div>
+          {/* 広告枠やバナーを想定したエリア */}
+          <div className="bg-gray-200 h-64 flex items-center justify-center text-gray-400 text-xs border border-gray-300">
+            Ad Space / Pick Up
+          </div>
+
+        </aside>
+
       </div>
-    </div>
+    </main>
   );
 }
