@@ -33,6 +33,19 @@ export type LegacyPlayer = {
   };
 };
 
+// 例: lib/mappers/nf3.ts みたいなところにいるはず
+import type { CompletePlayerData } from '@/lib/types/player'; // or '@/lib/types'
+
+export function mapNF3ToCompletePlayerData(raw: NF3SourceType): CompletePlayerData {
+  return {
+    // raw から必要な項目を変換して
+    season_stats: ...,
+    meta: ...,
+    // その他フィールド
+  };
+}
+
+
 /**
  * 既存のPlayer型を新しいPlayerProfile型にマッピング
  */
