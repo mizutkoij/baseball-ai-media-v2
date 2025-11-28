@@ -47,13 +47,13 @@ export default function PlayersPage() {
 
   // フィルタリング
   const filteredPlayers = players.filter(player => {
-    const matchesSearch = player.fullName?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = !searchQuery || player.fullName?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTeam = filterTeam === 'all' || player.team === filterTeam;
     return matchesSearch && matchesTeam;
   });
 
   // チーム一覧を取得（重複なし）
-  const teams = Array.from(new Set(players.map(p => p.team).filter(Boolean)));
+  const teams = Array.from(new Set(players.map(p => p.team).filter(Boolean))).sort();
 
   if (loading) {
     return (

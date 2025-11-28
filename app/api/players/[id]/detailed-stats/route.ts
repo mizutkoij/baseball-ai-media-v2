@@ -9,9 +9,20 @@ export async function GET(
   try {
     const { id: playerId } = await params;
 
+    // Get query parameters from the request
+    const searchParams = request.nextUrl.searchParams;
+    const team = searchParams.get('team');
+    const name = searchParams.get('name');
+
+    // Build query string for VPS API
+    const queryString = new URLSearchParams({
+      ...(team && { team }),
+      ...(name && { name }),
+    }).toString();
+
     // VPS APIにリクエストを転送
     const response = await fetch(
-      `${VPS_API_URL}/api/players/${playerId}/detailed-stats`,
+      `${VPS_API_URL}/api/players/${playerId}/detailed-stats${queryString ? `?${queryString}` : ''}`,
       {
         headers: {
           'Content-Type': 'application/json',
