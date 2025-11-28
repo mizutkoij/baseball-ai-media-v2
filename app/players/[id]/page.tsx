@@ -122,7 +122,11 @@ export default function PlayerDetailPage({ params }: PageProps) {
   }, [rawData]);
 
   useEffect(() => {
-    params.then(p => setPlayerId(p.id));
+    params.then(p => {
+      // Decode the URL-encoded player ID
+      const decodedId = decodeURIComponent(p.id);
+      setPlayerId(decodedId);
+    });
   }, [params]);
 
   useEffect(() => {
@@ -142,7 +146,9 @@ export default function PlayerDetailPage({ params }: PageProps) {
 
     fetch(`/api/players/all-stats?name=${encodeURIComponent(name)}&team=${encodeURIComponent(team)}&number=${encodeURIComponent(number)}`)
       .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch');
+        if (!res.ok) {
+          throw new Error(`API returned ${res.status}`);
+        }
         return res.json();
       })
       .then(data => {
@@ -150,6 +156,7 @@ export default function PlayerDetailPage({ params }: PageProps) {
         setLoading(false);
       })
       .catch(err => {
+        console.error('Error fetching player data:', err);
         setError(err.message);
         setLoading(false);
       });
