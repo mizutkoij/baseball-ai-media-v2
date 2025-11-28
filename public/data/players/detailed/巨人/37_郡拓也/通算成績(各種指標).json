@@ -10,7 +10,7 @@
     "XR+-0.37": "TA",
     "RCWIN-0.05": "PS",
     "XRWIN-0.04": "TTO率",
-    "BABIP.000": NaN
+    "BABIP.000": null
   },
   {
     "NOI0.0": "-",
@@ -23,6 +23,6 @@
     "XR+-0.37": "0.000",
     "RCWIN-0.05": "-",
     "XRWIN-0.04": "0.0%",
-    "BABIP.000": NaN
+    "BABIP.000": null
   }
 ]
