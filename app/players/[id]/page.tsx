@@ -234,7 +234,41 @@ export default function PlayerDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* 選手情報セクション - プロフィールデータがないため非表示 */}
+        {/* 選手情報セクション */}
+        <div className="bg-slate-800/50 border border-slate-700 border-t-0 rounded-b-md shadow-sm p-4 mb-6">
+          <h2 className="text-xs font-bold text-slate-300 mb-3">選手情報</h2>
+
+          <div className="space-y-3 text-sm">
+            {/* 基本情報を1行にまとめる */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-300">
+              {/* TODO: 実際のドラフト情報をここに挿入 */}
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400 text-xs">ドラフト:</span>
+                <span className="text-slate-500">[データ未登録]</span>
+              </div>
+              <span className="text-slate-600">|</span>
+              {/* TODO: 実際の出身地をここに挿入 */}
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400 text-xs">出身:</span>
+                <span className="text-slate-500">[データ未登録]</span>
+              </div>
+            </div>
+
+            {/* 経歴 */}
+            <div className="flex items-start gap-2 text-xs">
+              <span className="text-slate-400 whitespace-nowrap">経歴:</span>
+              {/* TODO: 実際の経歴をここに挿入 */}
+              <span className="text-slate-500">[データ未登録]</span>
+            </div>
+
+            {/* SNSリンク */}
+            <div className="flex items-center gap-3 pt-1">
+              <span className="text-slate-400 text-xs">SNS:</span>
+              {/* TODO: 実際のSNSリンクをここに挿入 */}
+              <span className="text-slate-500 text-xs">[データ未登録]</span>
+            </div>
+          </div>
+        </div>
 
         {/* 年度選択 */}
         <div className="bg-slate-800/50 border border-slate-700 rounded-t-md shadow-sm p-3 mb-0">
