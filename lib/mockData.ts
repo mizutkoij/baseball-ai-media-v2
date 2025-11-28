@@ -49,15 +49,22 @@ export const TODAYS_GAMES: Game[] = [
   },
 ];
 
-// 順位表（セ・リーグ）
-export const STANDINGS: StandingItem[] = [
-  { rank: 1, team: TEAMS.T, played: 60, win: 35, loss: 22, draw: 3, gamesBack: '-', pct: '.614' },
-  { rank: 2, team: TEAMS.G, played: 60, win: 32, loss: 25, draw: 3, gamesBack: '3.0', pct: '.561' },
-  { rank: 3, team: TEAMS.DB, played: 59, win: 30, loss: 27, draw: 2, gamesBack: '2.0', pct: '.526' },
-  { rank: 4, team: TEAMS.C, played: 61, win: 28, loss: 30, draw: 3, gamesBack: '2.0', pct: '.483' },
-  { rank: 5, team: TEAMS.S, played: 60, win: 25, loss: 33, draw: 2, gamesBack: '3.0', pct: '.431' },
-  { rank: 6, team: TEAMS.D, played: 60, win: 22, loss: 36, draw: 2, gamesBack: '3.0', pct: '.379' },
-];
+// 順位表（
+export const STANDINGS = {
+  central: [
+    { rank: 1, team: TEAMS.T, played: 60, win: 35, loss: 22, draw: 3, gamesBack: '-', pct: '.614' },
+    { rank: 2, team: TEAMS.G, played: 60, win: 32, loss: 25, draw: 3, gamesBack: '3.0', pct: '.561' },
+    { rank: 3, team: TEAMS.DB, played: 59, win: 30, loss: 27, draw: 2, gamesBack: '2.0', pct: '.526' },
+    { rank: 4, team: TEAMS.C, played: 61, win: 28, loss: 30, draw: 3, gamesBack: '2.0', pct: '.483' },
+    { rank: 5, team: TEAMS.S, played: 60, win: 25, loss: 33, draw: 2, gamesBack: '3.0', pct: '.431' },
+    { rank: 6, team: TEAMS.D, played: 60, win: 22, loss: 36, draw: 2, gamesBack: '3.0', pct: '.379' },
+  ],
+  pacific: [
+    // ダミーでOKなのであとでちゃんと埋める
+    // { rank: 1, team: TEAMS.〜, ... },
+  ],
+};
+
 
 // 個人成績リーダーズ
 export const LEADERS = {
