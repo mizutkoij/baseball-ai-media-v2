@@ -1,6 +1,8 @@
 // lib/types.ts
 // ✅ とりあえずビルド通したいなら
 import type { CompletePlayerData } from '@/lib/types';
+// lib/types.ts
+export type { CompletePlayerData } from './types/player';
 
 
 export type Team = {
