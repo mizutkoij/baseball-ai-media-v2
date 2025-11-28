@@ -727,6 +727,15 @@ export interface Pitch {
   pitch_number: number;
 }
 
+// lib/types/player.ts
+export type CompletePlayerData = {
+  // こっちが新しい想定
+  season_stats: ...;
+  meta: ...;
+  // 他のフィールド
+};
+
+
 /**
  * 球種
  */
