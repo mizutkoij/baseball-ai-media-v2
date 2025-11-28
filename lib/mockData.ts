@@ -1,3 +1,13 @@
+import type {
+  Game,
+  Highlight,
+  NewsArticle,
+  StandingItem,
+  StandingsByLeague,   // ★ 追加
+  StatLeader,
+  LeaderBoardCategory,
+} from './types';
+
 // lib/mockData.ts
 import { Game, StandingItem, Article, StatLeader } from './types';
 
