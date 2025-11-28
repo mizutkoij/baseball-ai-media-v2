@@ -5,7 +5,12 @@ import Link from 'next/link';
 import { ArrowLeft, Twitter, Instagram, Loader2 } from 'lucide-react';
 
 // 新しい型定義をインポート
-import type { CompletePlayerData } from '@/lib/types/player';
+import type { CompletePlayerData } from '@/lib/types'; // or '@/lib/types/player'
+
+const playerData: CompletePlayerData | null = useMemo(() => {
+  if (!rawData) return null;
+  return mapNF3ToCompletePlayerData(rawData);
+}, [rawData]);
 
 // nf3データ用のマッパーをインポート
 import { mapNF3ToCompletePlayerData, type NF3AllStatsData } from '@/lib/mappers/nf3PlayerMapper';
