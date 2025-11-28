@@ -4,10 +4,10 @@ const VPS_API_URL = process.env.VPS_API_URL || 'http://133.18.115.175:3001';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const playerId = params.id;
+    const { id: playerId } = await params;
 
     // VPS APIにリクエストを転送
     const response = await fetch(
