@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
+    <title>Boxscore: 西武 vs ソフトバンク</title>
+    <style>
+        body{font-family:sans-serif;margin:2em;line-height:1.6;color:#333}
+        a{color:#007bff;text-decoration:none}a:hover{text-decoration:underline}
+        .container{max-width:960px;margin:auto}
+
+        /* Header & Nav */
+        .game-status-line{font-size:0.8rem;font-weight:500;color:#888;margin-bottom:0.5em}
+        .team-score-header{display:flex;align-items:baseline;gap:10px;margin-bottom:1.5em}
+        .team-score-header .team-name-long{font-size:1.0rem;font-weight:500}
+        .team-score-header .game-score{font-size:2.2rem;font-weight:700;line-height:1}
+        .broadcast-placeholder{background-color:#fff8e1;border:1px solid #ffecb3;padding:1em;margin:1em 0;font-size:0.9em}
+        nav ul{list-style:none;padding:0;border-bottom:2px solid #333;margin-bottom:2em;display:flex}
+        nav li{margin-right:15px}
+        nav li a{padding:8px 12px;font-size:0.85rem;font-weight:500;display:block;color:#333}
+        nav li.current a{font-weight:600;border-bottom:2px solid #007bff;color:#000}
+        nav li a:hover{text-decoration:none;color:#000}
+
+        /* Scoreboard */
+        .scoreboard table{width:100%;text-align:center;border-collapse:collapse;margin-bottom:2em}
+        .scoreboard th,.scoreboard td{border:1px solid #ddd;padding:4px 8px;font-size:0.9em}
+        .scoreboard th{background-color:#f2f2f2}
+        .scoreboard td.team-name{text-align:left;font-weight:bold;white-space:nowrap;}
+        .scoreboard td.score-cell, .scoreboard td.total-score, .scoreboard td.total-hit, .scoreboard td.total-error{font-weight:normal;white-space:nowrap;}
+
+        /* Sections and Tables */
+        h1{font-size:1.4rem;margin-bottom:1em}
+        h2{font-size:1.2rem;margin-top:1.5em;margin-bottom:0.8em}
+        h3{font-size:1.0rem;font-weight:600;margin-top:1.5em;margin-bottom:0.5em}
+        section.bb-modCommon01{margin-bottom:2em}
+        header.bb-head01{border-bottom:2px solid #eee;margin-bottom:.5em;padding-bottom:.5em}
+        h2.bb-head01__title{font-size:1.0rem;font-weight:600;margin:0;color:#333}
+        
+        table.bb-gameTable{width:auto;border-collapse:collapse;margin-bottom:1em;font-size:0.8rem}
+        table.bb-gameTable th, table.bb-gameTable td{border:none;padding:4px 8px;text-align:left;}
+        table.bb-gameTable th{background-color:transparent;font-weight:normal;font-size:0.8rem;color:#333;width:auto;}
+        table.bb-gameTable td{font-size:0.875rem;font-weight:400;white-space:nowrap;}
+        table.bb-gameTable .hr-list, table.bb-gameTable .battery-list{white-space:normal;} /* Allow wrapping for lists */
+        
+        /* Boxscore specific styles */
+        .boxscore-table th{background-color:#f4f4f4;font-size:0.8rem;font-weight:600;line-height:1.4}
+        .boxscore-table td{font-size:0.8rem;font-weight:400;line-height:1.6}
+        
+        /* Play-by-play specific styles */
+        .play-by-play-inning-header{font-size:0.8rem;font-weight:600;margin-top:1em;margin-bottom:0.5em}
+        .play-by-play-atbat-line{font-size:0.8rem;margin-bottom:0.2em}
+        .play-by-play-sub-info{font-size:0.7rem;color:#aaa;margin-left:0.5em}
+        .placeholder{padding:1em;background-color:#f8f8f8;border:1px dashed #ccc;text-align:center;font-size:0.9em;color:#666}
+    </style></head><body><div class="container">
+    
+    <p class="game-status-line">パ・リーグ / 2025-07-05 00:00:00 / みずほPayPay</p>
+    <div class="team-score-header">
+        <span class="team-name-long">西武</span>
+        <span class="game-score">3 - 4</span>
+        <span class="team-name-long">ソフトバンク</span>
+    </div>
+    <div class="broadcast-placeholder"><strong>放送予定:</strong> あいうえお</div>
+    <nav><ul><li class=''><a href='./game-20250705-h-l-14-npb-home.html'>試合トップ</a></li><li class='current'><a href='./game-20250705-h-l-14-npb-boxscore.html'>打者・投手成績</a></li><li class=''><a href='./game-20250705-h-l-14-npb-playbyplay.html'>試合経過</a></li></ul></nav>
+    <div class="scoreboard"><table><thead><tr><th>チーム</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>R</th><th>H</th><th>E</th></tr></thead><tbody>
+        <tr><td class="team-name">西武</td><td class='score-cell'>1</td><td class='score-cell'>0</td><td class='score-cell'>0</td><td class='score-cell'>1</td><td class='score-cell'>0</td><td class='score-cell'>1</td><td class='score-cell'>0</td><td class='score-cell'>0</td><td class='score-cell'>0</td><td class="total-score">3</td><td class="total-hit">6</td><td class="total-error">0</td></tr>
+        <tr><td class="team-name">ソフトバンク</td><td class='score-cell'>0</td><td class='score-cell'>0</td><td class='score-cell'>2</td><td class='score-cell'>0</td><td class='score-cell'>1</td><td class='score-cell'>1</td><td class='score-cell'>0</td><td class='score-cell'>0</td><td class='score-cell'>x</td><td>4</td><td class="total-hit">10</td><td class="total-error">0</td></tr>
+        </tbody></table></div>
+    
+    <section class="bb-modCommon01"><header class="bb-head01"><h2 class="bb-head01__title">西武 - 打撃成績</h2></header><table class='bb-gameTable boxscore-table'><thead><tr><th>選手</th><th>守備</th><th>打数</th><th>得点</th><th>安打</th><th>打点</th><th>打席結果</th></tr></thead><tbody></tbody></table></section>
+                  <section class="bb-modCommon01"><header class="bb-head01"><h2 class="bb-head01__title">西武 - 投手成績</h2></header><table class='bb-gameTable boxscore-table'><thead><tr><th>勝敗S</th><th>投手</th><th>投球回</th><th>対戦打者</th><th>投球数</th><th>被安打</th><th>奪三振</th><th>与四球</th><th>自責点</th></tr></thead><tbody></tbody></table></section>
+                  <section class="bb-modCommon01"><header class="bb-head01"><h2 class="bb-head01__title">ソフトバンク - 打撃成績</h2></header><table class='bb-gameTable boxscore-table'><thead><tr><th>選手</th><th>守備</th><th>打数</th><th>得点</th><th>安打</th><th>打点</th><th>打席結果</th></tr></thead><tbody></tbody></table></section>
+                  <section class="bb-modCommon01"><header class="bb-head01"><h2 class="bb-head01__title">ソフトバンク - 投手成績</h2></header><table class='bb-gameTable boxscore-table'><thead><tr><th>勝敗S</th><th>投手</th><th>投球回</th><th>対戦打者</th><th>投球数</th><th>被安打</th><th>奪三振</th><th>与四球</th><th>自責点</th></tr></thead><tbody></tbody></table></section>
+    </div></body></html>
