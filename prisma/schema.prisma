@@ -1,0 +1,172 @@
+// Prisma schema for Baseball AI Media v2
+// Vercel Postgres
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+// =====================================
+// Players Master Table
+// =====================================
+model Player {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Basic Info
+  league       String
+  originalId   Int?
+  fullName     String
+  firstName    String?
+  lastName     String?
+  nativeName   String?
+  jerseyNumber Int?
+
+  // Physical Info
+  birthDate DateTime?
+  age       Int?
+  heightCm  Int?
+  weightKg  Int?
+  bats      String? // L, R, S
+  throws    String? // L, R
+
+  // Position & Team
+  primaryPosition String?
+  currentTeam     String?
+
+  // Relations
+  battingStats  BattingStats[]
+  pitchingStats PitchingStats[]
+
+  @@index([fullName])
+  @@index([currentTeam])
+  @@index([league])
+  @@map("players")
+}
+
+// =====================================
+// Batting Stats
+// =====================================
+model BattingStats {
+  id       String @id @default(cuid())
+  playerId String
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  year   Int
+  team   String?
+  league String?
+
+  // Core Stats
+  pa  Int @default(0) // Plate Appearances
+  ab  Int @default(0) // At Bats
+  h   Int @default(0) // Hits
+  h2  Int @default(0) // Doubles
+  h3  Int @default(0) // Triples
+  hr  Int @default(0) // Home Runs
+  rbi Int @default(0)
+  r   Int @default(0) // Runs
+  bb  Int @default(0) // Walks
+  so  Int @default(0) // Strikeouts
+  sb  Int @default(0) // Stolen Bases
+  cs  Int @default(0) // Caught Stealing
+
+  // Advanced Stats
+  avg     Float? // Batting Average
+  obp     Float? // On-Base Percentage
+  slg     Float? // Slugging
+  ops     Float?
+  woba    Float?
+  wrcPlus Float? // wRC+
+  war     Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([playerId, year, team])
+  @@index([year])
+  @@index([league])
+  @@map("batting_stats")
+}
+
+// =====================================
+// Pitching Stats
+// =====================================
+model PitchingStats {
+  id       String @id @default(cuid())
+  playerId String
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  year   Int
+  team   String?
+  league String?
+
+  // Games
+  g   Int @default(0) // Games
+  gs  Int @default(0) // Games Started
+  cg  Int @default(0) // Complete Games
+  sho Int @default(0) // Shutouts
+  sv  Int @default(0) // Saves
+  hld Int @default(0) // Holds
+
+  // Innings & Results
+  ip Float @default(0) // Innings Pitched
+  w  Int   @default(0) // Wins
+  l  Int   @default(0) // Losses
+
+  // Opponent Stats
+  h  Int @default(0) // Hits Allowed
+  r  Int @default(0) // Runs
+  er Int @default(0) // Earned Runs
+  hr Int @default(0) // Home Runs Allowed
+  bb Int @default(0) // Walks
+  so Int @default(0) // Strikeouts
+
+  // Advanced Stats
+  era  Float? // ERA
+  whip Float? // WHIP
+  k9   Float? // K/9
+  bb9  Float? // BB/9
+  fip  Float? // FIP
+  war  Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([playerId, year, team])
+  @@index([year])
+  @@index([league])
+  @@map("pitching_stats")
+}
+
+// =====================================
+// Games
+// =====================================
+model Game {
+  id     String @id @default(cuid())
+  gameId String @unique // e.g., "2025080301"
+
+  date      DateTime
+  year      Int
+  homeTeam  String
+  awayTeam  String
+  homeScore Int?
+  awayScore Int?
+
+  status String? // scheduled, live, final
+  venue  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+  @@index([year])
+  @@index([homeTeam])
+  @@index([awayTeam])
+  @@map("games")
+}
