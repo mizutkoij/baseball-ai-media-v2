@@ -1,7 +1,8 @@
 import { Game } from '@/lib/types';
 
 export function Scoreboard({ games }: { games: Game[] }) {
-  if (!games.length) return null;
+  // 試合がない場合は何も表示しない
+  if (!games || games.length === 0) return null;
 
   return (
     <div className="w-full bg-white border-b border-gray-200 overflow-x-auto">

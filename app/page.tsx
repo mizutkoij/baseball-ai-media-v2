@@ -21,21 +21,6 @@ export default function HomePage() {
         {/* === 左カラム: メインコンテンツ (幅広) === */}
         <div className="lg:col-span-8 space-y-8">
 
-          {/* ヒーローセクション: 今一番読ませたい記事 */}
-          <section className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-            <div className="aspect-video w-full bg-gray-200 relative flex items-center justify-center text-gray-400">
-              <span className="font-bold">Feature Image (16:9)</span>
-            </div>
-            <div className="p-5">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2 leading-tight">
-                2025年プロ野球、AI分析が予測する「後半戦のキーマン」とは？
-              </h2>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                データスタジアムの数値を基に、セイバーメトリクス指標「wRC+」が急上昇している選手をピックアップ。意外な伏兵がチームの命運を握っているかもしれない。
-              </p>
-            </div>
-          </section>
-
           {/* 最新ニュースリスト */}
           <section>
             <div className="flex items-center justify-between mb-3 border-l-4 border-blue-700 pl-3">
