@@ -5,12 +5,16 @@ import type { CompletePlayerData } from '@/lib/types';
 export type { CompletePlayerData } from './types/player';
 
 
-export type Team = {
-  id: string;
-  name: string;      // 例: 阪神
-  fullName: string;  // 例: 阪神タイガース
-  color: string;     // チームカラー
+export type StandingItem = {
+  id: string;          // 追加
+  rank: number;
+  name: string;
+  gamesBack: string;
+  pct: string;
+  color: string;
+  // ほかのフィールド…
 };
+
 
 export type GameStatus = 'scheduled' | 'live' | 'final';
 
