@@ -22,20 +22,29 @@ export function StandingsWidget({ central, pacific }: Props) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {items.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-2 py-2 font-mono text-gray-600 text-center">{item.rank}</td>
-                <td className="px-2 py-2 font-bold text-gray-800 flex items-center gap-2">
-                  <span
-                    className="w-2 h-2 rounded-full shrink-0"
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <span className="truncate">{item.name}</span>
-                </td>
-                <td className="px-2 py-2 text-center font-mono text-gray-600">{item.gamesBack}</td>
-                <td className="px-2 py-2 text-center font-mono text-gray-600">{item.pct}</td>
-              </tr>
-            ))}
+  {items.map((item) => (
+    <tr
+      key={`${item.rank}-${item.name}`}
+      className="hover:bg-gray-50 transition-colors"
+    >
+      <td className="px-2 py-2 font-mono text-gray-600 text-center">
+        {item.rank}
+      </td>
+      <td className="px-2 py-2 font-bold text-gray-800 flex items-center gap-2">
+        <span
+          className="w-2 h-2 rounded-full shrink-0"
+          style={{ backgroundColor: item.color }}
+        />
+        <span className="truncate">{item.name}</span>
+      </td>
+      <td className="px-2 py-2 text-center font-mono text-gray-600">
+        {item.gamesBack}
+      </td>
+      <td className="px-2 py-2 text-center font-mono text-gray-600">
+        {item.pct}
+      </td>
+    </tr>
+  ))}
           </tbody>
         </table>
       </div>
