@@ -2,21 +2,19 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Twitter, Instagram, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 
-// 新しい型定義をインポート
-import type { CompletePlayerData } from '@/lib/types'; // or '@/lib/types/player'
+import type { CompletePlayerData } from '@/lib/types';
+import {
+  mapNF3ToCompletePlayerData,
+  type NF3AllStatsData,
+} from '@/lib/mappers/nf3PlayerMapper';
 
-// nf3データ用のマッパーをインポート
-import { mapNF3ToCompletePlayerData, type NF3AllStatsData } from '@/lib/mappers/nf3PlayerMapper';
-
-// 除外するフィールド
 const EXCLUDE_FIELDS = ['詳細URL', 'nf3_player_id', 'url', 'nf3_id'];
 
-// データをフィルタリングする関数
 const filterData = (data: any): any => {
   if (Array.isArray(data)) {
-    return data.map(item => filterData(item));
+    return data.map((item) => filterData(item));
   }
 
   if (typeof data === 'object' && data !== null) {
@@ -32,8 +30,15 @@ const filterData = (data: any): any => {
   return data;
 };
 
-// 統計データを見やすく表示するコンポーネント
-const StatsSection = ({ title, data, showTitle = true }: { title: string; data: any; showTitle?: boolean }) => {
+const StatsSection = ({
+  title,
+  data,
+  showTitle = true,
+}: {
+  title: string;
+  data: any;
+  showTitle?: boolean;
+}) => {
   const filteredData = filterData(data);
 
   if (!filteredData || (typeof filteredData === 'object' && Object.keys(filteredData).length === 0)) {
@@ -44,28 +49,53 @@ const StatsSection = ({ title, data, showTitle = true }: { title: string; data: 
   if (Array.isArray(filteredData)) {
     if (filteredData.length === 0) return null;
 
+    const firstRow = filteredData[0];
+    if (!firstRow || typeof firstRow !== 'object') return null;
+
+    const columns = Object.keys(firstRow);
+
     return (
       <div className="mb-6">
         {showTitle && (
-          <h3 className="text-sm font-bold text-slate-200 mb-3 border-b-2 border-blue-500 pb-1 inline-block">{title}</h3>
+          <h3 className="text-sm font-bold text-slate-200 mb-3 border-b-2 border-blue-500 pb-1 inline-block">
+            {title}
+          </h3>
         )}
         <div className="overflow-x-auto">
           <table className="min-w-full text-xs sm:text-sm bg-slate-800/50 border border-slate-700">
             <thead>
               <tr className="bg-slate-700/50 border-b-2 border-slate-600">
-                {Object.keys(filteredData[0]).map((key) => (
-                  <th key={key} className="text-left px-3 py-2 text-slate-300 font-bold whitespace-nowrap">{key}</th>
+                {columns.map((key) => (
+                  <th
+                    key={key}
+                    className="text-left px-3 py-2 text-slate-300 font-bold whitespace-nowrap"
+                  >
+                    {key}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {filteredData.map((row, i) => (
-                <tr key={i} className={i % 2 === 0 ? "bg-slate-800/30 hover:bg-slate-700/30" : "bg-slate-800/50 hover:bg-slate-700/40"}>
-                  {Object.values(row).map((value: any, j) => (
-                    <td key={j} className="px-3 py-2 text-slate-200 border-b border-slate-700/50 whitespace-nowrap">
-                      {typeof value === 'object' ? JSON.stringify(value) : String(value)}
-                    </td>
-                  ))}
+                <tr
+                  key={i}
+                  className={
+                    i % 2 === 0
+                      ? 'bg-slate-800/30 hover:bg-slate-700/30'
+                      : 'bg-slate-800/50 hover:bg-slate-700/40'
+                  }
+                >
+                  {columns.map((key, j) => {
+                    const value = (row as any)[key];
+                    return (
+                      <td
+                        key={j}
+                        className="px-3 py-2 text-slate-200 border-b border-slate-700/50 whitespace-nowrap"
+                      >
+                        {typeof value === 'object' ? JSON.stringify(value) : String(value ?? '')}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>
@@ -80,16 +110,23 @@ const StatsSection = ({ title, data, showTitle = true }: { title: string; data: 
     return (
       <div className="mb-6">
         {showTitle && (
-          <h3 className="text-sm font-bold text-slate-200 mb-3 border-b-2 border-blue-500 pb-1 inline-block">{title}</h3>
+          <h3 className="text-sm font-bold text-slate-200 mb-3 border-b-2 border-blue-500 pb-1 inline-block">
+            {title}
+          </h3>
         )}
         <div className="overflow-x-auto">
           <table className="min-w-full text-xs sm:text-sm bg-slate-800/50 border border-slate-700">
             <tbody>
               {Object.entries(filteredData).map(([key, value], i) => (
-                <tr key={key} className={i % 2 === 0 ? "bg-slate-800/30" : "bg-slate-800/50"}>
-                  <td className="px-3 py-2 text-slate-400 font-medium border-b border-slate-700/50 whitespace-nowrap w-1/3">{key}</td>
+                <tr
+                  key={key}
+                  className={i % 2 === 0 ? 'bg-slate-800/30' : 'bg-slate-800/50'}
+                >
+                  <td className="px-3 py-2 text-slate-400 font-medium border-b border-slate-700/50 whitespace-nowrap w-1/3">
+                    {key}
+                  </td>
                   <td className="px-3 py-2 text-slate-200 border-b border-slate-700/50">
-                    {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+                    {typeof value === 'object' ? JSON.stringify(value) : String(value ?? '')}
                   </td>
                 </tr>
               ))}
@@ -104,35 +141,75 @@ const StatsSection = ({ title, data, showTitle = true }: { title: string; data: 
 };
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
+type ActiveTab =
+  | 'overview'
+  | 'career'
+  | 'situational'
+  | 'detailed'
+  | 'batting'
+  | 'farm'
+  | 'other';
+
 export default function PlayerDetailPage({ params }: PageProps) {
-  const [playerId, setPlayerId] = useState<string>('');
   const [rawData, setRawData] = useState<NF3AllStatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'career' | 'situational' | 'detailed' | 'batting' | 'farm' | 'other'>('overview');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 
-  // 新しい型に変換
+  // URL から渡ってくる id を decode
+  const playerId = useMemo(() => decodeURIComponent(params.id), [params.id]);
+
+  // NF3 生データ → 統合済み型へ
   const playerData: CompletePlayerData | null = useMemo(() => {
     if (!rawData) return null;
     return mapNF3ToCompletePlayerData(rawData);
   }, [rawData]);
 
-  useEffect(() => {
-    params.then(p => {
-      // Decode the URL-encoded player ID
-      const decodedId = decodeURIComponent(p.id);
-      setPlayerId(decodedId);
-    });
-  }, [params]);
+  // 利用可能な年度一覧を抽出
+  const availableYears = useMemo<number[]>(() => {
+    const years = new Set<number>();
 
+    const pushFromArray = (arr: any[] | undefined, key: string = '年度') => {
+      if (!Array.isArray(arr)) return;
+      arr.forEach((row) => {
+        const y = (row as any)?.[key];
+        if (!y) return;
+        const n = Number(String(y).replace(/[^\d]/g, ''));
+        if (!Number.isNaN(n)) years.add(n);
+      });
+    };
+
+    if (rawData?.pitcherStats?.['通算成績']) {
+      pushFromArray(rawData.pitcherStats['通算成績'] as any[]);
+    }
+    if (rawData?.batterStats) {
+      Object.entries(rawData.batterStats)
+        .filter(([k]) => k !== 'basic_info')
+        .forEach(([, val]) => {
+          pushFromArray(val as any[]);
+        });
+    }
+
+    return Array.from(years).sort((a, b) => b - a);
+  }, [rawData]);
+
+  // availableYears が取れたら、その最新年度をデフォルト選択にする
+  useEffect(() => {
+    if (availableYears.length > 0) {
+      setSelectedYear((prev) =>
+        availableYears.includes(prev) ? prev : availableYears[0]
+      );
+    }
+  }, [availableYears]);
+
+  // データ取得
   useEffect(() => {
     if (!playerId) return;
 
-    // Parse player ID: format is "team_number_name"
     const parts = playerId.split('_');
     if (parts.length < 3) {
       setError('Invalid player ID format');
@@ -144,23 +221,59 @@ export default function PlayerDetailPage({ params }: PageProps) {
     const number = parts[1];
     const name = parts.slice(2).join('_');
 
-    fetch(`/api/players/all-stats?name=${encodeURIComponent(name)}&team=${encodeURIComponent(team)}&number=${encodeURIComponent(number)}`)
-      .then(res => {
+    setLoading(true);
+    setError(null);
+
+    const controller = new AbortController();
+
+    fetch(
+      `/api/players/all-stats?name=${encodeURIComponent(
+        name
+      )}&team=${encodeURIComponent(team)}&number=${encodeURIComponent(number)}`,
+      { signal: controller.signal }
+    )
+      .then((res) => {
         if (!res.ok) {
           throw new Error(`API returned ${res.status}`);
         }
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         setRawData(data);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
+        if (err.name === 'AbortError') return;
         console.error('Error fetching player data:', err);
         setError(err.message);
         setLoading(false);
       });
+
+    return () => controller.abort();
   }, [playerId]);
+
+  // 年度ごとの通算成績（今季概要用）
+  const seasonSummaryForYear = useMemo(() => {
+    const rows = rawData?.pitcherStats?.['通算成績'];
+    if (!rows) return null;
+    if (!Array.isArray(rows)) return rows;
+
+    const filtered = rows.filter(
+      (row: any) => String(row?.['年度']) === String(selectedYear)
+    );
+    return filtered.length > 0 ? filtered : rows;
+  }, [rawData, selectedYear]);
+
+  const seasonIndicatorsForYear = useMemo(() => {
+    const rows = rawData?.pitcherStats?.['通算成績(各種指標)'];
+    if (!rows) return null;
+    if (!Array.isArray(rows)) return rows;
+
+    const filtered = rows.filter(
+      (row: any) => String(row?.['年度']) === String(selectedYear)
+    );
+    return filtered.length > 0 ? filtered : rows;
+  }, [rawData, selectedYear]);
 
   if (loading) {
     return (
@@ -179,7 +292,9 @@ export default function PlayerDetailPage({ params }: PageProps) {
         <div className="text-center max-w-md mx-auto px-6">
           <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 mb-6">
             <p className="text-red-400 mb-2">エラーが発生しました</p>
-            <p className="text-slate-300 text-sm">{error || 'データの取得に失敗しました'}</p>
+            <p className="text-slate-300 text-sm">
+              {error || 'データの取得に失敗しました'}
+            </p>
           </div>
           <Link
             href="/players"
@@ -192,7 +307,7 @@ export default function PlayerDetailPage({ params }: PageProps) {
     );
   }
 
-  const { profile, career, season_stats, original_metrics, meta } = playerData;
+  const { profile, meta } = playerData;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 p-3 sm:p-6">
@@ -208,7 +323,7 @@ export default function PlayerDetailPage({ params }: PageProps) {
           </Link>
         </div>
 
-        {/* ヘッダーバー（チームカラー） */}
+        {/* ヘッダーバー */}
         <div className="bg-gradient-to-r from-slate-800 to-slate-700 border-b-4 border-blue-500 rounded-t-md overflow-hidden mb-0">
           <div className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -216,16 +331,24 @@ export default function PlayerDetailPage({ params }: PageProps) {
                 <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
                   {profile.name_kanji}
                 </h1>
-                <div className="flex items-center gap-3 text-slate-300 text-sm">
-                  <span className="font-bold">#{profile.current_number}</span>
-                  <span>|</span>
+                <div className="flex flex-wrap items-center gap-3 text-slate-300 text-sm">
+                  {profile.current_number && (
+                    <>
+                      <span className="font-bold">#{profile.current_number}</span>
+                      <span>|</span>
+                    </>
+                  )}
                   <span className="font-medium">{profile.current_team}</span>
                   <span>|</span>
-                  <span>{profile.throws}投{profile.bats}打</span>
+                  <span>
+                    {profile.throws}投{profile.bats}打
+                  </span>
                   {rawData?.pitcherStats?.basic_info?.最終登板 && (
                     <>
                       <span>|</span>
-                      <span>最終登板: {rawData.pitcherStats.basic_info.最終登板}</span>
+                      <span>
+                        最終登板: {rawData.pitcherStats.basic_info.最終登板}
+                      </span>
                     </>
                   )}
                 </div>
@@ -234,37 +357,30 @@ export default function PlayerDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* 選手情報セクション */}
+        {/* 選手情報セクション（TODO部分はそのままプレースホルダ） */}
         <div className="bg-slate-800/50 border border-slate-700 border-t-0 rounded-b-md shadow-sm p-4 mb-6">
           <h2 className="text-xs font-bold text-slate-300 mb-3">選手情報</h2>
 
           <div className="space-y-3 text-sm">
-            {/* 基本情報を1行にまとめる */}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-300">
-              {/* TODO: 実際のドラフト情報をここに挿入 */}
               <div className="flex items-center gap-2">
                 <span className="text-slate-400 text-xs">ドラフト:</span>
                 <span className="text-slate-500">[データ未登録]</span>
               </div>
               <span className="text-slate-600">|</span>
-              {/* TODO: 実際の出身地をここに挿入 */}
               <div className="flex items-center gap-2">
                 <span className="text-slate-400 text-xs">出身:</span>
                 <span className="text-slate-500">[データ未登録]</span>
               </div>
             </div>
 
-            {/* 経歴 */}
             <div className="flex items-start gap-2 text-xs">
               <span className="text-slate-400 whitespace-nowrap">経歴:</span>
-              {/* TODO: 実際の経歴をここに挿入 */}
               <span className="text-slate-500">[データ未登録]</span>
             </div>
 
-            {/* SNSリンク */}
             <div className="flex items-center gap-3 pt-1">
               <span className="text-slate-400 text-xs">SNS:</span>
-              {/* TODO: 実際のSNSリンクをここに挿入 */}
               <span className="text-slate-500 text-xs">[データ未登録]</span>
             </div>
           </div>
@@ -272,8 +388,11 @@ export default function PlayerDetailPage({ params }: PageProps) {
 
         {/* 年度選択 */}
         <div className="bg-slate-800/50 border border-slate-700 rounded-t-md shadow-sm p-3 mb-0">
-          <div className="flex items-center gap-3">
-            <label htmlFor="year-select" className="text-xs font-medium text-slate-300">
+          <div className="flex flex-wrap items-center gap-3">
+            <label
+              htmlFor="year-select"
+              className="text-xs font-medium text-slate-300"
+            >
               表示年度:
             </label>
             <select
@@ -282,13 +401,24 @@ export default function PlayerDetailPage({ params }: PageProps) {
               onChange={(e) => setSelectedYear(Number(e.target.value))}
               className="text-sm bg-slate-700 border border-slate-600 text-slate-200 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {/* TODO: 実際の年度データをここに挿入 */}
-              <option value={2025}>2025年</option>
-              <option value={2024}>2024年</option>
-              <option value={2023}>2023年</option>
-              <option value={2022}>2022年</option>
+              {availableYears.length > 0 ? (
+                availableYears.map((y) => (
+                  <option key={y} value={y}>
+                    {y}年
+                  </option>
+                ))
+              ) : (
+                <>
+                  <option value={2025}>2025年</option>
+                  <option value={2024}>2024年</option>
+                  <option value={2023}>2023年</option>
+                  <option value={2022}>2022年</option>
+                </>
+              )}
             </select>
-            <span className="text-xs text-slate-400">※ 年度を切り替えて過去の成績を表示</span>
+            <span className="text-xs text-slate-400">
+              ※ 年度を切り替えて過去の成績を表示
+            </span>
           </div>
         </div>
 
@@ -316,28 +446,28 @@ export default function PlayerDetailPage({ params }: PageProps) {
               通算成績
             </button>
             {rawData?.pitcherStats && (
-              <button
-                onClick={() => setActiveTab('situational')}
-                className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-all border-b-2 -mb-px ${
-                  activeTab === 'situational'
-                    ? 'border-blue-500 text-blue-400 bg-slate-700/50'
-                    : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'
-                }`}
-              >
-                状況別成績
-              </button>
-            )}
-            {rawData?.pitcherStats && (
-              <button
-                onClick={() => setActiveTab('detailed')}
-                className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-all border-b-2 -mb-px ${
-                  activeTab === 'detailed'
-                    ? 'border-blue-500 text-blue-400 bg-slate-700/50'
-                    : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'
-                }`}
-              >
-                詳細分析
-              </button>
+              <>
+                <button
+                  onClick={() => setActiveTab('situational')}
+                  className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-all border-b-2 -mb-px ${
+                    activeTab === 'situational'
+                      ? 'border-blue-500 text-blue-400 bg-slate-700/50'
+                      : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'
+                  }`}
+                >
+                  状況別成績
+                </button>
+                <button
+                  onClick={() => setActiveTab('detailed')}
+                  className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-all border-b-2 -mb-px ${
+                    activeTab === 'detailed'
+                      ? 'border-blue-500 text-blue-400 bg-slate-700/50'
+                      : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'
+                  }`}
+                >
+                  詳細分析
+                </button>
+              </>
             )}
             {rawData?.batterStats && (
               <button
@@ -378,24 +508,24 @@ export default function PlayerDetailPage({ params }: PageProps) {
             {/* 概要タブ */}
             {activeTab === 'overview' && (
               <div className="space-y-6">
-                {rawData?.pitcherStats?.['通算成績'] && (
+                {seasonSummaryForYear && (
                   <StatsSection
                     title={`${selectedYear}年 シーズン成績`}
-                    data={rawData.pitcherStats['通算成績']}
+                    data={seasonSummaryForYear}
                     showTitle={true}
                   />
                 )}
-                {rawData?.pitcherStats?.['通算成績(各種指標)'] && (
+                {seasonIndicatorsForYear && (
                   <StatsSection
                     title={`${selectedYear}年 各種指標`}
-                    data={rawData.pitcherStats['通算成績(各種指標)']}
+                    data={seasonIndicatorsForYear}
                     showTitle={true}
                   />
                 )}
               </div>
             )}
 
-            {/* 通算成績タブ */}
+            {/* 通算成績タブ（まだプレースホルダ） */}
             {activeTab === 'career' && (
               <div className="space-y-6">
                 <div className="bg-blue-500/10 border border-blue-500/20 rounded-md p-6">
@@ -403,21 +533,25 @@ export default function PlayerDetailPage({ params }: PageProps) {
                     プロ通算成績
                   </h3>
                   <div className="space-y-4">
-                    {/* TODO: 実際の通算成績データをここに挿入 */}
                     <div className="text-sm text-slate-400">
-                      <p className="mb-4">プロ入り以降の全年度通算成績が表示されます。</p>
+                      <p className="mb-4">
+                        プロ入り以降の全年度通算成績が表示されます。
+                      </p>
 
-                      {/* プレースホルダー：通算投手成績 */}
                       <div className="bg-slate-800/50 rounded-md p-4 border border-slate-700 mb-4">
-                        <h4 className="text-xs font-bold text-slate-300 mb-2">通算投手成績</h4>
+                        <h4 className="text-xs font-bold text-slate-300 mb-2">
+                          通算投手成績
+                        </h4>
                         <div className="text-slate-500 text-xs">
-                          [登板数、投球回、防御率、勝敗、奪三振、WHIP などの通算データ]
+                          [登板数、投球回、防御率、勝敗、奪三振、WHIP
+                          などの通算データ]
                         </div>
                       </div>
 
-                      {/* プレースホルダー：年度別成績一覧 */}
                       <div className="bg-slate-800/50 rounded-md p-4 border border-slate-700">
-                        <h4 className="text-xs font-bold text-slate-300 mb-2">年度別成績</h4>
+                        <h4 className="text-xs font-bold text-slate-300 mb-2">
+                          年度別成績
+                        </h4>
                         <div className="text-slate-500 text-xs">
                           [各年度の成績を一覧表示]
                         </div>
@@ -472,10 +606,16 @@ export default function PlayerDetailPage({ params }: PageProps) {
                     showTitle={true}
                   />
                 )}
-                {rawData.pitcherStats['球種一覧 (※参照データ：Sportsnavi・与四球に故意四球はカウントせず)'] && (
+                {rawData.pitcherStats[
+                  '球種一覧 (※参照データ：Sportsnavi・与四球に故意四球はカウントせず)'
+                ] && (
                   <StatsSection
                     title="球種一覧"
-                    data={rawData.pitcherStats['球種一覧 (※参照データ：Sportsnavi・与四球に故意四球はカウントせず)']}
+                    data={
+                      rawData.pitcherStats[
+                        '球種一覧 (※参照データ：Sportsnavi・与四球に故意四球はカウントせず)'
+                      ]
+                    }
                     showTitle={true}
                   />
                 )}
@@ -488,17 +628,12 @@ export default function PlayerDetailPage({ params }: PageProps) {
                 {Object.entries(rawData.batterStats)
                   .filter(([key]) => key !== 'basic_info')
                   .map(([key, value]) => (
-                    <StatsSection
-                      key={key}
-                      title={key}
-                      data={value}
-                      showTitle={true}
-                    />
+                    <StatsSection key={key} title={key} data={value} showTitle={true} />
                   ))}
               </div>
             )}
 
-            {/* 二軍成績タブ */}
+            {/* 二軍成績タブ（プレースホルダ） */}
             {activeTab === 'farm' && (
               <div className="space-y-6">
                 <div className="bg-blue-500/10 border border-blue-500/20 rounded-md p-6">
@@ -506,29 +641,31 @@ export default function PlayerDetailPage({ params }: PageProps) {
                     二軍成績（イースタン/ウエスタン）
                   </h3>
                   <div className="space-y-4">
-                    {/* TODO: 実際の二軍成績データをここに挿入 */}
                     <div className="text-sm text-slate-400">
                       <p className="mb-4">二軍での成績データが表示されます。</p>
 
-                      {/* プレースホルダー：二軍投手成績 */}
                       <div className="bg-slate-800/50 rounded-md p-4 border border-slate-700 mb-4">
-                        <h4 className="text-xs font-bold text-slate-300 mb-2">二軍投手成績（今季）</h4>
+                        <h4 className="text-xs font-bold text-slate-300 mb-2">
+                          二軍投手成績（今季）
+                        </h4>
                         <div className="text-slate-500 text-xs">
                           [試合数、投球回、防御率、勝敗、奪三振、与四球などのデータ]
                         </div>
                       </div>
 
-                      {/* プレースホルダー：二軍年度別成績 */}
                       <div className="bg-slate-800/50 rounded-md p-4 border border-slate-700 mb-4">
-                        <h4 className="text-xs font-bold text-slate-300 mb-2">二軍年度別成績</h4>
+                        <h4 className="text-xs font-bold text-slate-300 mb-2">
+                          二軍年度別成績
+                        </h4>
                         <div className="text-slate-500 text-xs">
                           [年度ごとの二軍成績テーブル]
                         </div>
                       </div>
 
-                      {/* プレースホルダー：二軍詳細分析 */}
                       <div className="bg-slate-800/50 rounded-md p-4 border border-slate-700">
-                        <h4 className="text-xs font-bold text-slate-300 mb-2">二軍詳細データ</h4>
+                        <h4 className="text-xs font-bold text-slate-300 mb-2">
+                          二軍詳細データ
+                        </h4>
                         <div className="text-slate-500 text-xs">
                           [球種別成績、対戦相手別成績など]
                         </div>
@@ -563,40 +700,59 @@ export default function PlayerDetailPage({ params }: PageProps) {
             <div className="grid grid-cols-2 gap-2">
               <div className="text-slate-400">最終更新:</div>
               <div className="text-xs">
-                {new Date(meta.last_updated).toLocaleString('ja-JP')}
+                {meta?.last_updated
+                  ? new Date(meta.last_updated).toLocaleString('ja-JP')
+                  : '—'}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="text-slate-400">データソース:</div>
               <div>
                 <ul className="list-disc list-inside text-xs">
-                  {meta.data_sources.map((source, i) => (
-                    <li key={i}>{source.name} - {source.data_type.join(', ')}</li>
-                  ))}
+                  {meta?.data_sources?.map((source, i) => (
+                    <li key={i}>
+                      {source.name} - {source.data_type.join(', ')}
+                    </li>
+                  )) ?? <li>—</li>}
                 </ul>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="text-slate-400">データ品質:</div>
               <div className="flex items-center gap-2">
-                <span className={`inline-block w-3 h-3 rounded-full ${
-                  meta.data_quality.reliability === 'high' ? 'bg-green-500' :
-                  meta.data_quality.reliability === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
-                }`}></span>
-                <span className="text-xs">
-                  {meta.data_quality.reliability === 'high' ? '高' :
-                   meta.data_quality.reliability === 'medium' ? '中' : '低'}
-                  （完全性: {(meta.data_quality.completeness * 100).toFixed(0)}%）
-                </span>
+                {meta?.data_quality ? (
+                  <>
+                    <span
+                      className={`inline-block w-3 h-3 rounded-full ${
+                        meta.data_quality.reliability === 'high'
+                          ? 'bg-green-500'
+                          : meta.data_quality.reliability === 'medium'
+                          ? 'bg-yellow-500'
+                          : 'bg-red-500'
+                      }`}
+                    ></span>
+                    <span className="text-xs">
+                      {meta.data_quality.reliability === 'high'
+                        ? '高'
+                        : meta.data_quality.reliability === 'medium'
+                        ? '中'
+                        : '低'}
+                      （完全性:{' '}
+                      {(meta.data_quality.completeness * 100).toFixed(0)}%）
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-xs text-slate-500">—</span>
+                )}
               </div>
             </div>
-            {meta.data_quality.notes && (
+            {meta?.data_quality?.notes && (
               <div className="text-xs text-slate-400 mt-3 pt-3 border-t border-slate-700">
                 {meta.data_quality.notes}
               </div>
             )}
             <div className="text-xs text-slate-400 mt-3 pt-3 border-t border-slate-700">
-              バージョン: {meta.version}
+              バージョン: {meta?.version ?? '—'}
             </div>
           </div>
         </div>
