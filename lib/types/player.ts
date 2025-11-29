@@ -89,6 +89,12 @@ export interface PlayerProfile {
 
   /** 在籍状況 */
   status: 'active' | 'injured' | 'retired' | 'free_agent' | 'minor';
+
+  social?: {
+    twitter?: string;
+    instagram?: string;
+    youtube?: string;
+  };
 }
 
 /**

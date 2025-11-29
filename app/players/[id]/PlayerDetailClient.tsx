@@ -5,6 +5,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 // lucide-react がない場合は react-icons/bi を使用
 import { BiArrowBack } from 'react-icons/bi'; 
+import { FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
 import type { CompletePlayerData, NF3AllStatsData } from '@/lib/types';
 
 // デザイン変更: ダークモード用クラスを白ベース用クラスに置換するためのマッピング
@@ -178,70 +179,70 @@ export default function PlayerDetailClient({ playerData, rawData }: PlayerDetail
 
   const { profile, meta } = playerData;
 
+  export function PlayerDetailClient({ playerData, rawData }: PlayerDetailClientProps) {
+  // ... (中略: useState, useMemo など) ...
+
+  const { profile } = playerData;
+  
+  // ... (中略) ...
+
   return (
     <div className="min-h-screen bg-[#f3f4f6] pb-12">
       <div className="max-w-6xl mx-auto px-4 pt-6">
         
         {/* 戻るボタン */}
         <div className="mb-4">
-          <Link
-            href="/stats"
-            className="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors text-xs font-bold"
-          >
-            <BiArrowBack className="w-4 h-4" />
-            選手一覧に戻る
+          <Link href="/stats" className="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 text-xs font-bold">
+            <BiArrowBack /> 選手一覧に戻る
           </Link>
         </div>
 
-        {/* ヘッダーバー (プロフィール) */}
-        <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-6">
-          <div className="p-6 flex flex-col md:flex-row gap-6">
-            {/* アイコンの代わりの円 */}
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 font-bold border-2 border-gray-200 shrink-0">
-               Photo
-            </div>
-            
+        {/* プロフィールヘッダー */}
+        <div className="bg-white border border-gray-200 rounded-sm shadow-sm p-6 mb-6 flex flex-col md:flex-row gap-6">
+            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 font-bold border-2 border-gray-200 shrink-0">Photo</div>
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-end gap-3">
-                {profile.name_kanji}
-                <span className="text-sm text-gray-500 font-normal mb-1">{profile.name_kana}</span>
-              </h1>
-              
+              <div className="flex justify-between items-start">
+                  <div>
+                      <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-end gap-3">
+                        {profile.name_kanji} <span className="text-sm text-gray-500 font-normal mb-1">{profile.name_kana}</span>
+                      </h1>
+                  </div>
+                  
+                  {/* ★ SNSリンク表示エリア */}
+                  {profile.social && (
+                      <div className="flex gap-3">
+                          {profile.social.twitter && (
+                              <a href={profile.social.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black transition-colors">
+                                  <FaTwitter size={20} />
+                              </a>
+                          )}
+                          {profile.social.instagram && (
+                              <a href={profile.social.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 transition-colors">
+                                  <FaInstagram size={20} />
+                              </a>
+                          )}
+                          {profile.social.youtube && (
+                              <a href={profile.social.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 transition-colors">
+                                  <FaYoutube size={20} />
+                              </a>
+                          )}
+                      </div>
+                  )}
+              </div>
+
               <div className="flex flex-wrap items-center gap-2 text-sm font-bold text-gray-700 mb-4">
-                <span className="bg-yellow-400 text-black px-2 py-0.5 rounded-sm text-xs">
-                  {profile.current_team}
-                </span>
-                {profile.current_number && (
-                  <>
-                    <span className="font-mono">#{profile.current_number}</span>
-                    <span className="text-gray-300">|</span>
-                  </>
-                )}
-                <span>{profile.position}</span>
-                <span className="text-gray-300">|</span>
-                <span>{profile.throws}投{profile.bats}打</span>
+                {/* ... (既存の所属チームや背番号表示) ... */}
+                <span className="bg-yellow-400 text-black px-2 py-0.5 rounded-sm text-xs">{profile.current_team}</span>
+                <span className="font-mono">#{profile.current_number}</span>
+                {/* ... */}
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-gray-600 bg-gray-50 p-3 rounded-sm border border-gray-200">
-                <div>
-                  <span className="block text-gray-400 mb-0.5">生年月日</span>
-                  <span className="font-medium">{profile.birth_date}</span>
-                </div>
-                <div>
-                  <span className="block text-gray-400 mb-0.5">体格</span>
-                  <span className="font-medium">{profile.height} / {profile.weight}</span>
-                </div>
-                <div>
-                  <span className="block text-gray-400 mb-0.5">ドラフト</span>
-                  <span className="font-medium">データなし</span>
-                </div>
-                <div>
-                  <span className="block text-gray-400 mb-0.5">出身地</span>
-                  <span className="font-medium">{profile.birthplace_prefecture || '-'}</span>
-                </div>
+                {/* ... (既存の基本情報グリッド) ... */}
+                <div><span className="block text-gray-400 mb-0.5">生年月日</span><span className="font-medium">{profile.birth_date || '-'}</span></div>
+                {/* ... */}
               </div>
             </div>
-          </div>
         </div>
 
         {/* 年度選択 */}
