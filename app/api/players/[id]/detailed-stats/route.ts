@@ -4,18 +4,19 @@ const VPS_API_URL = process.env.VPS_API_URL || 'http://133.18.115.175:3001';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 動的パラメータから playerId を取得（URL デコードもしておく）
-    const playerId = decodeURIComponent(params.id);
+    // 動的パラメータを Promise から取り出し
+    const { id } = await params;
+    const playerId = decodeURIComponent(id);
 
-    // クエリパラメータを取得
+    // クエリパラメータ
     const searchParams = request.nextUrl.searchParams;
     const team = searchParams.get('team') ?? undefined;
     const name = searchParams.get('name') ?? undefined;
 
-    // VPS API 向けクエリ文字列を組み立て
+    // VPS API 向けクエリ文字列
     const vpsQuery = new URLSearchParams();
     if (team) vpsQuery.set('team', team);
     if (name) vpsQuery.set('name', name);
