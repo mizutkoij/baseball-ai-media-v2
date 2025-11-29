@@ -1,27 +1,31 @@
-import type {
-  Game,
-  Highlight,
-  NewsArticle,
-  StandingItem,
-  StandingsByLeague,   // ★ 追加
-  StatLeader,
-  LeaderBoardCategory,
-} from './types';
-
 // lib/mockData.ts
-import { Game, StandingItem, Article, StatLeader } from './types';
+import { Game, StandingsByLeague, Article, Team, LeadersByLeague } from './types';
 
-// チーム定義
-export const TEAMS: Record<string, any> = {
-  T: { id: 'T', name: '阪神', fullName: '阪神タイガース', color: '#FFE100' },
-  G: { id: 'G', name: '巨人', fullName: '読売ジャイアンツ', color: '#F97600' },
-  DB: { id: 'DB', name: 'DeNA', fullName: '横浜DeNAベイスターズ', color: '#0055A5' },
-  C: { id: 'C', name: '広島', fullName: '広島東洋カープ', color: '#FF0000' },
-  S: { id: 'S', name: 'ヤクルト', fullName: '東京ヤクルトスワローズ', color: '#96C800' },
-  D: { id: 'D', name: '中日', fullName: '中日ドラゴンズ', color: '#002569' },
+// チームカラー定義
+export const TEAM_COLORS: Record<string, string> = {
+  T: '#FFE100', G: '#F97600', DB: '#0055A5', C: '#FF0000', S: '#96C800', D: '#002569',
+  H: '#FCC800', F: '#006298', M: '#000000', E: '#860010', L: '#1F366A', Bs: '#00081D',
 };
 
-// 今日の試合（ダミー）
+// チーム定義 (Team型に準拠して統一)
+export const TEAMS: Record<string, Team> = {
+  // セ・リーグ
+  T: { id: 'T', name: '阪神タイガース', shortName: '阪神', color: TEAM_COLORS.T },
+  G: { id: 'G', name: '読売ジャイアンツ', shortName: '巨人', color: TEAM_COLORS.G },
+  DB: { id: 'DB', name: '横浜DeNAベイスターズ', shortName: 'DeNA', color: TEAM_COLORS.DB },
+  C: { id: 'C', name: '広島東洋カープ', shortName: '広島', color: TEAM_COLORS.C },
+  S: { id: 'S', name: '東京ヤクルトスワローズ', shortName: 'ヤクルト', color: TEAM_COLORS.S },
+  D: { id: 'D', name: '中日ドラゴンズ', shortName: '中日', color: TEAM_COLORS.D },
+  // パ・リーグ
+  H: { id: 'H', name: '福岡ソフトバンクホークス', shortName: 'ソフトバンク', color: TEAM_COLORS.H },
+  F: { id: 'F', name: '北海道日本ハムファイターズ', shortName: '日本ハム', color: TEAM_COLORS.F },
+  M: { id: 'M', name: '千葉ロッテマリーンズ', shortName: 'ロッテ', color: TEAM_COLORS.M },
+  E: { id: 'E', name: '東北楽天ゴールデンイーグルス', shortName: '楽天', color: TEAM_COLORS.E },
+  L: { id: 'L', name: '埼玉西武ライオンズ', shortName: '西武', color: TEAM_COLORS.L },
+  Bs: { id: 'Bs', name: 'オリックス・バファローズ', shortName: 'オリックス', color: TEAM_COLORS.Bs },
+};
+
+// 今日の試合
 export const TODAYS_GAMES: Game[] = [
   {
     id: '1',
@@ -59,236 +63,43 @@ export const TODAYS_GAMES: Game[] = [
   },
 ];
 
+// 順位表データ
 export const STANDINGS: StandingsByLeague = {
-  // セ・リーグ（左）
   central: [
-    {
-      league: 'セ・リーグ',
-      rank: 1,
-      teamShort: 'T',
-      teamName: '阪神',
-      wins: 35,
-      losses: 20,
-      draws: 2,
-      winPct: 0.636,
-      gb: '-',
-      recent: '○○○●○',
-      streak: '3連勝',
-      runDiff: +65,
-      runsScored: 210,
-      runsAllowed: 145,
-    },
-    {
-      league: 'セ・リーグ',
-      rank: 2,
-      teamShort: 'G',
-      teamName: '巨人',
-      wins: 33,
-      losses: 22,
-      draws: 3,
-      winPct: 0.600,
-      gb: '2.0',
-      recent: '●○○○●',
-      streak: '1連敗',
-      runDiff: +40,
-      runsScored: 198,
-      runsAllowed: 158,
-    },
-    {
-      league: 'セ・リーグ',
-      rank: 3,
-      teamShort: 'DB',
-      teamName: 'DeNA',
-      wins: 30,
-      losses: 25,
-      draws: 1,
-      winPct: 0.545,
-      gb: '5.0',
-      recent: '○●○○○',
-      streak: '3連勝',
-      runDiff: +25,
-      runsScored: 185,
-      runsAllowed: 160,
-    },
-    {
-      league: 'セ・リーグ',
-      rank: 4,
-      teamShort: 'C',
-      teamName: '広島',
-      wins: 27,
-      losses: 27,
-      draws: 2,
-      winPct: 0.500,
-      gb: '7.5',
-      recent: '●●○●○',
-      streak: '1連勝',
-      runDiff: +5,
-      runsScored: 170,
-      runsAllowed: 165,
-    },
-    {
-      league: 'セ・リーグ',
-      rank: 5,
-      teamShort: 'S',
-      teamName: 'ヤクルト',
-      wins: 24,
-      losses: 30,
-      draws: 3,
-      winPct: 0.444,
-      gb: '10.5',
-      recent: '○●●●○',
-      streak: '1連勝',
-      runDiff: -20,
-      runsScored: 160,
-      runsAllowed: 180,
-    },
-    {
-      league: 'セ・リーグ',
-      rank: 6,
-      teamShort: 'D',
-      teamName: '中日',
-      wins: 20,
-      losses: 35,
-      draws: 1,
-      winPct: 0.364,
-      gb: '15.0',
-      recent: '●●○●●',
-      streak: '2連敗',
-      runDiff: -45,
-      runsScored: 140,
-      runsAllowed: 185,
-    },
+    { league: 'セ・リーグ', rank: 1, teamShort: '阪神', teamName: '阪神タイガース', wins: 35, losses: 22, draws: 3, winPct: 0.614, gb: '-', recent: '3勝2敗', streak: '勝2', runDiff: 15, runsScored: 200, runsAllowed: 185 },
+    { league: 'セ・リーグ', rank: 2, teamShort: '巨人', teamName: '読売ジャイアンツ', wins: 32, losses: 25, draws: 3, winPct: 0.561, gb: '3.0', recent: '2勝3敗', streak: '負1', runDiff: 5, runsScored: 190, runsAllowed: 185 },
+    { league: 'セ・リーグ', rank: 3, teamShort: 'DeNA', teamName: '横浜DeNAベイスターズ', wins: 30, losses: 27, draws: 2, winPct: 0.526, gb: '2.0', recent: '4勝1敗', streak: '勝3', runDiff: 8, runsScored: 195, runsAllowed: 187 },
+    { league: 'セ・リーグ', rank: 4, teamShort: '広島', teamName: '広島東洋カープ', wins: 28, losses: 30, draws: 3, winPct: 0.483, gb: '2.5', recent: '1勝4敗', streak: '負2', runDiff: -10, runsScored: 170, runsAllowed: 180 },
+    { league: 'セ・リーグ', rank: 5, teamShort: 'ヤクルト', teamName: '東京ヤクルトスワローズ', wins: 25, losses: 33, draws: 2, winPct: 0.431, gb: '3.0', recent: '3勝2敗', streak: '勝1', runDiff: -15, runsScored: 180, runsAllowed: 195 },
+    { league: 'セ・リーグ', rank: 6, teamShort: '中日', teamName: '中日ドラゴンズ', wins: 22, losses: 36, draws: 2, winPct: 0.379, gb: '3.0', recent: '2勝3敗', streak: '負1', runDiff: -20, runsScored: 150, runsAllowed: 170 },
   ],
-
-  // パ・リーグ（右）
   pacific: [
-    {
-      league: 'パ・リーグ',
-      rank: 1,
-      teamShort: 'H',
-      teamName: 'ソフトバンク',
-      wins: 36,
-      losses: 18,
-      draws: 3,
-      winPct: 0.667,
-      gb: '-',
-      recent: '○○●○○',
-      streak: '2連勝',
-      runDiff: +70,
-      runsScored: 220,
-      runsAllowed: 150,
-    },
-    {
-      league: 'パ・リーグ',
-      rank: 2,
-      teamShort: 'L',
-      teamName: '西武',
-      wins: 31,
-      losses: 23,
-      draws: 1,
-      winPct: 0.574,
-      gb: '5.0',
-      recent: '○●○○●',
-      streak: '1連敗',
-      runDiff: +30,
-      runsScored: 190,
-      runsAllowed: 160,
-    },
-    {
-      league: 'パ・リーグ',
-      rank: 3,
-      teamShort: 'B',
-      teamName: 'オリックス',
-      wins: 29,
-      losses: 24,
-      draws: 2,
-      winPct: 0.547,
-      gb: '6.5',
-      recent: '●○○●○',
-      streak: '1連勝',
-      runDiff: +18,
-      runsScored: 175,
-      runsAllowed: 157,
-    },
-    {
-      league: 'パ・リーグ',
-      rank: 4,
-      teamShort: 'F',
-      teamName: '日本ハム',
-      wins: 26,
-      losses: 28,
-      draws: 1,
-      winPct: 0.481,
-      gb: '10.0',
-      recent: '○●●○●',
-      streak: '1連敗',
-      runDiff: -5,
-      runsScored: 165,
-      runsAllowed: 170,
-    },
-    {
-      league: 'パ・リーグ',
-      rank: 5,
-      teamShort: 'M',
-      teamName: 'ロッテ',
-      wins: 23,
-      losses: 31,
-      draws: 1,
-      winPct: 0.426,
-      gb: '13.0',
-      recent: '●○●●●',
-      streak: '3連敗',
-      runDiff: -30,
-      runsScored: 150,
-      runsAllowed: 180,
-    },
-    {
-      league: 'パ・リーグ',
-      rank: 6,
-      teamShort: 'E',
-      teamName: '楽天',
-      wins: 20,
-      losses: 34,
-      draws: 2,
-      winPct: 0.370,
-      gb: '16.0',
-      recent: '○●●●○',
-      streak: '1連勝',
-      runDiff: -38,
-      runsScored: 148,
-      runsAllowed: 186,
-    },
-  ],
+    { league: 'パ・リーグ', rank: 1, teamShort: 'ソフトバンク', teamName: '福岡ソフトバンクホークス', wins: 38, losses: 20, draws: 2, winPct: 0.655, gb: '-', recent: '5勝0敗', streak: '勝5', runDiff: 40, runsScored: 220, runsAllowed: 180 },
+    { league: 'パ・リーグ', rank: 2, teamShort: '日本ハム', teamName: '北海道日本ハムファイターズ', wins: 32, losses: 26, draws: 2, winPct: 0.552, gb: '5.0', recent: '3勝2敗', streak: '勝1', runDiff: 10, runsScored: 190, runsAllowed: 180 },
+    { league: 'パ・リーグ', rank: 3, teamShort: 'ロッテ', teamName: '千葉ロッテマリーンズ', wins: 30, losses: 28, draws: 2, winPct: 0.517, gb: '2.0', recent: '2勝3敗', streak: '負1', runDiff: 0, runsScored: 185, runsAllowed: 185 },
+    { league: 'パ・リーグ', rank: 4, teamShort: '楽天', teamName: '東北楽天ゴールデンイーグルス', wins: 28, losses: 31, draws: 1, winPct: 0.475, gb: '2.5', recent: '2勝3敗', streak: '負2', runDiff: -5, runsScored: 175, runsAllowed: 180 },
+    { league: 'パ・リーグ', rank: 5, teamShort: 'オリックス', teamName: 'オリックス・バファローズ', wins: 26, losses: 32, draws: 2, winPct: 0.448, gb: '1.5', recent: '1勝4敗', streak: '負3', runDiff: -15, runsScored: 160, runsAllowed: 175 },
+    { league: 'パ・リーグ', rank: 6, teamShort: '西武', teamName: '埼玉西武ライオンズ', wins: 20, losses: 38, draws: 2, winPct: 0.345, gb: '6.0', recent: '1勝4敗', streak: '負1', runDiff: -30, runsScored: 155, runsAllowed: 185 },
+  ]
 };
 
-
-
 // 個人成績リーダーズ
-export const LEADERS = {
+export const LEADERS: LeadersByLeague = {
   central: {
     batting: [
-      { rank: 1, player: '近本 光司', team: 'T', value: '.315' },
-      { rank: 2, player: '牧 秀悟', team: 'DB', value: '.308' },
-      { rank: 3, player: '岡本 和真', team: 'G', value: '.301' },
-    ],
-    // 必要なら homerun もここに
-    homerun: [
-      { rank: 1, player: '村上 宗隆', team: 'S', value: '18' },
-      { rank: 2, player: '佐藤 輝明', team: 'T', value: '16' },
-      { rank: 3, player: '岡本 和真', team: 'G', value: '15' },
+      { rank: 1, player: '近本 光司', team: '阪神', value: '.315' },
+      { rank: 2, player: '牧 秀悟', team: 'DeNA', value: '.308' },
+      { rank: 3, player: '岡本 和真', team: '巨人', value: '.301' },
     ],
   },
   pacific: {
     batting: [
-      // ダミーデータでOK
-      // { rank: 1, player: '〜', team: 'H', value: '.320' },
+      { rank: 1, player: '近藤 健介', team: 'ソフトバンク', value: '.342' },
+      { rank: 2, player: '柳田 悠岐', team: 'ソフトバンク', value: '.318' },
+      { rank: 3, player: '万波 中正', team: '日本ハム', value: '.295' },
     ],
-    homerun: [
-      // ここもあとで埋める
-    ],
-  },
+  }
 };
-
 
 // ニュース記事
 export const ARTICLES: Article[] = [

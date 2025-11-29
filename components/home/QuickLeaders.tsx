@@ -6,9 +6,8 @@ type Props = {
 };
 
 export function QuickLeaders({ central, pacific }: Props) {
-  
   const renderList = (items: StatLeader[], leagueName: string, headerColor: string) => (
-    <div className="flex-1 min-w-[300px]">
+    <div className="flex-1 min-w-[320px]">
       <div className={`px-3 py-2 border-b border-gray-200 ${headerColor} text-white rounded-t-sm`}>
         <h3 className="font-bold text-sm">打率ランキング ({leagueName})</h3>
       </div>
@@ -39,7 +38,6 @@ export function QuickLeaders({ central, pacific }: Props) {
         <h2 className="font-bold text-gray-800 text-lg border-l-4 border-blue-700 pl-3">個人成績</h2>
         <a href="/stats" className="text-xs text-blue-600 hover:underline">詳細 »</a>
       </div>
-
       <div className="flex flex-col md:flex-row gap-4">
         {renderList(central, 'セ', 'bg-green-700')}
         {renderList(pacific, 'パ', 'bg-blue-600')}

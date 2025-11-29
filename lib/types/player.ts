@@ -1,10 +1,6 @@
 /**
  * Player-related TypeScript interfaces
  * Comprehensive player data types for Baseball AI Media
- *
- * - 各セクションごとに整理
- * - ダミーの CompletePlayerData 定義を削除
- * - HitDirection の重複 ('center') を修正
  */
 
 // ============================================
@@ -20,6 +16,24 @@ export type DateTimeISO = string;
 // ============================================
 // 1. CORE INFORMATION (プロフィール・経歴)
 // ============================================
+
+/**
+ * 野球のポジション
+ */
+export type Position =
+  | 'P' // 投手
+  | 'C' // 捕手
+  | '1B' // 一塁手
+  | '2B' // 二塁手
+  | '3B' // 三塁手
+  | 'SS' // 遊撃手
+  | 'LF' // 左翼手
+  | 'CF' // 中堅手
+  | 'RF' // 右翼手
+  | 'DH' // 指名打者
+  | 'OF' // 外野手（汎用）
+  | 'IF' // 内野手（汎用）
+  | 'UTIL'; // ユーティリティ
 
 /**
  * 選手プロフィールの基本情報
@@ -78,22 +92,38 @@ export interface PlayerProfile {
 }
 
 /**
- * 野球のポジション
+ * 所属球団履歴
  */
-export type Position =
-  | 'P' // 投手
-  | 'C' // 捕手
-  | '1B' // 一塁手
-  | '2B' // 二塁手
-  | '3B' // 三塁手
-  | 'SS' // 遊撃手
-  | 'LF' // 左翼手
-  | 'CF' // 中堅手
-  | 'RF' // 右翼手
-  | 'DH' // 指名打者
-  | 'OF' // 外野手（汎用）
-  | 'IF' // 内野手（汎用）
-  | 'UTIL'; // ユーティリティ
+export interface TeamHistory {
+  /** 球団名 */
+  team: TeamID;
+
+  /** 開始年 */
+  start_year: number;
+
+  /** 終了年（現在所属の場合はnull） */
+  end_year: number | null;
+
+  /** 移籍方法 */
+  transfer_type?: 'draft' | 'trade' | 'free_agent' | 'release';
+}
+
+/**
+ * 背番号履歴
+ */
+export interface NumberHistory {
+  /** 背番号 */
+  number: string;
+
+  /** 開始年 */
+  start_year: number;
+
+  /** 終了年（現在使用中の場合はnull） */
+  end_year: number | null;
+
+  /** 球団名 */
+  team: TeamID;
+}
 
 /**
  * 選手の経歴情報
@@ -137,40 +167,6 @@ export interface PlayerCareer {
 
   /** 背番号履歴 */
   number_history: NumberHistory[];
-}
-
-/**
- * 所属球団履歴
- */
-export interface TeamHistory {
-  /** 球団名 */
-  team: TeamID;
-
-  /** 開始年 */
-  start_year: number;
-
-  /** 終了年（現在所属の場合はnull） */
-  end_year: number | null;
-
-  /** 移籍方法 */
-  transfer_type?: 'draft' | 'trade' | 'free_agent' | 'release';
-}
-
-/**
- * 背番号履歴
- */
-export interface NumberHistory {
-  /** 背番号 */
-  number: string;
-
-  /** 開始年 */
-  start_year: number;
-
-  /** 終了年（現在使用中の場合はnull） */
-  end_year: number | null;
-
-  /** 球団名 */
-  team: TeamID;
 }
 
 // ============================================
@@ -621,8 +617,6 @@ export type PAResult =
 
 /**
  * 打球方向
- *
- * NOTE: 'center' の重複を解消
  */
 export type HitDirection =
   | 'left'
@@ -1156,4 +1150,30 @@ export interface CompletePlayerData {
 
   /** メタ情報 */
   meta: PlayerDataMeta;
+}
+
+// ============================================
+// 11. RAW DATA TYPES (読み込み用生データ)
+// ============================================
+
+/**
+ * NF3から取得・保存された生のJSONデータ構造
+ * (キー名が日本語だったり、構造が変動するため柔軟な型定義にします)
+ */
+export interface NF3AllStatsData {
+  /** 基本情報 (basic_info.json) */
+  basic_info?: any;
+
+  /** 野手成績データ (batter_statsフォルダ内の各JSON) */
+  batterStats?: {
+    [key: string]: any[] | any; // '通算成績', '月別成績' など
+  };
+
+  /** 投手成績データ (pitcher_statsフォルダ内の各JSON) */
+  pitcherStats?: {
+    [key: string]: any[] | any;
+  };
+
+  /** その他任意のプロパティ */
+  [key: string]: any;
 }

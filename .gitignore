@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+# 本番に不要なデータは無視
+*.json.bak
+*.csv
+
+# ただし JSON は通す（main data）
+!*.json
