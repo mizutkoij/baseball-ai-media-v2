@@ -1,7 +1,21 @@
 /**
  * Player-related TypeScript interfaces
  * Comprehensive player data types for Baseball AI Media
+ *
+ * - 各セクションごとに整理
+ * - ダミーの CompletePlayerData 定義を削除
+ * - HitDirection の重複 ('center') を修正
  */
+
+// ============================================
+// 0. SHARED PRIMITIVE TYPE ALIASES
+// ============================================
+
+export type PlayerID = string;
+export type TeamID = string;
+export type GameID = string;
+export type DateISO = string; // "YYYY-MM-DD" or ISO8601
+export type DateTimeISO = string;
 
 // ============================================
 // 1. CORE INFORMATION (プロフィール・経歴)
@@ -12,7 +26,7 @@
  */
 export interface PlayerProfile {
   /** 選手ID（内部管理用） */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 氏名（漢字） */
   name_kanji: string;
@@ -24,7 +38,7 @@ export interface PlayerProfile {
   name_romaji: string;
 
   /** 生年月日 */
-  birth_date: string; // ISO 8601 format: "YYYY-MM-DD"
+  birth_date: DateISO; // ISO 8601 format: "YYYY-MM-DD"
 
   /** 年齢（自動計算） */
   age: number;
@@ -41,7 +55,7 @@ export interface PlayerProfile {
   /** 体重（kg） */
   weight?: number;
 
-  /** 投球/投打 */
+  /** 投球 */
   throws: 'R' | 'L' | 'S'; // Right, Left, Switch
 
   /** 打席 */
@@ -54,7 +68,7 @@ export interface PlayerProfile {
   secondary_positions?: Position[];
 
   /** 現在の所属球団 */
-  current_team: string;
+  current_team: TeamID;
 
   /** 現在の背番号 */
   current_number: string;
@@ -67,18 +81,18 @@ export interface PlayerProfile {
  * 野球のポジション
  */
 export type Position =
-  | 'P'    // 投手
-  | 'C'    // 捕手
-  | '1B'   // 一塁手
-  | '2B'   // 二塁手
-  | '3B'   // 三塁手
-  | 'SS'   // 遊撃手
-  | 'LF'   // 左翼手
-  | 'CF'   // 中堅手
-  | 'RF'   // 右翼手
-  | 'DH'   // 指名打者
-  | 'OF'   // 外野手（汎用）
-  | 'IF'   // 内野手（汎用）
+  | 'P' // 投手
+  | 'C' // 捕手
+  | '1B' // 一塁手
+  | '2B' // 二塁手
+  | '3B' // 三塁手
+  | 'SS' // 遊撃手
+  | 'LF' // 左翼手
+  | 'CF' // 中堅手
+  | 'RF' // 右翼手
+  | 'DH' // 指名打者
+  | 'OF' // 外野手（汎用）
+  | 'IF' // 内野手（汎用）
   | 'UTIL'; // ユーティリティ
 
 /**
@@ -86,7 +100,7 @@ export type Position =
  */
 export interface PlayerCareer {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 出身高校 */
   high_school?: string;
@@ -106,7 +120,7 @@ export interface PlayerCareer {
     round: number;
 
     /** 指名球団 */
-    team: string;
+    team: TeamID;
 
     /** ドラフト種別 */
     type?: 'new_player' | 'developmental' | '育成' | 'free_agent';
@@ -116,7 +130,7 @@ export interface PlayerCareer {
   debut_year: number;
 
   /** プロ初出場日 */
-  debut_date?: string;
+  debut_date?: DateISO;
 
   /** 所属球団履歴 */
   team_history: TeamHistory[];
@@ -130,7 +144,7 @@ export interface PlayerCareer {
  */
 export interface TeamHistory {
   /** 球団名 */
-  team: string;
+  team: TeamID;
 
   /** 開始年 */
   start_year: number;
@@ -156,31 +170,35 @@ export interface NumberHistory {
   end_year: number | null;
 
   /** 球団名 */
-  team: string;
+  team: TeamID;
 }
 
 // ============================================
 // 2. SEASON STATS (シーズン成績)
 // ============================================
 
+export type League = 'Central' | 'Pacific' | 'Eastern' | 'Western';
+
+export type Level = '1軍' | '2軍' | 'ポストシーズン' | '代表';
+
 /**
  * シーズン成績の共通フィールド
  */
 export interface BaseSeasonStats {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 年度 */
   year: number;
 
   /** 球団 */
-  team: string;
+  team: TeamID;
 
   /** リーグ */
-  league: 'Central' | 'Pacific' | 'Eastern' | 'Western';
+  league: League;
 
   /** レベル */
-  level: '1軍' | '2軍' | 'ポストシーズン' | '代表';
+  level: Level;
 
   /** 試合数 */
   games: number;
@@ -331,7 +349,7 @@ export interface PitchingSeasonStats extends BaseSeasonStats {
  */
 export interface AdvancedBattingStats {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 年度 */
   year: number;
@@ -387,7 +405,7 @@ export interface AdvancedBattingStats {
  */
 export interface AdvancedPitchingStats {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 年度 */
   year: number;
@@ -447,7 +465,7 @@ export interface AdvancedPitchingStats {
  */
 export interface StarScore {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 年度 */
   year: number;
@@ -471,7 +489,7 @@ export interface StarScore {
   rank: 'S+' | 'S' | 'A+' | 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' | 'E';
 
   /** 計算日時 */
-  calculated_at: string;
+  calculated_at: DateTimeISO;
 
   /** スコアの信頼度 */
   confidence: 'high' | 'medium' | 'low';
@@ -485,7 +503,7 @@ export interface StarScore {
  */
 export interface UndervaluedIndex {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 年度 */
   year: number;
@@ -503,7 +521,12 @@ export interface UndervaluedIndex {
   gap: number;
 
   /** カテゴリ */
-  category: 'highly_undervalued' | 'undervalued' | 'fair' | 'overvalued' | 'highly_overvalued';
+  category:
+    | 'highly_undervalued'
+    | 'undervalued'
+    | 'fair'
+    | 'overvalued'
+    | 'highly_overvalued';
 
   /** 説明 */
   explanation?: string;
@@ -514,7 +537,7 @@ export interface UndervaluedIndex {
  */
 export interface WPAStats {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 年度 */
   year: number;
@@ -543,7 +566,7 @@ export interface WPAStats {
  */
 export interface PredictedScore {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 予測対象年 */
   predicted_year: number;
@@ -568,12 +591,56 @@ export interface PredictedScore {
   model_version: string;
 
   /** 予測日時 */
-  predicted_at: string;
+  predicted_at: DateTimeISO;
 }
 
 // ============================================
 // 5. PITCH & PLATE APPEARANCE LOGS (一球・一打席ログ)
 // ============================================
+
+/**
+ * 打席結果の種類
+ */
+export type PAResult =
+  | '単打'
+  | '二塁打'
+  | '三塁打'
+  | '本塁打'
+  | '四球'
+  | '死球'
+  | '三振'
+  | 'ゴロ'
+  | 'フライ'
+  | 'ライナー'
+  | '犠打'
+  | '犠飛'
+  | '併殺'
+  | '失策'
+  | '野選'
+  | '振逃';
+
+/**
+ * 打球方向
+ *
+ * NOTE: 'center' の重複を解消
+ */
+export type HitDirection =
+  | 'left'
+  | 'left_center'
+  | 'center'
+  | 'right_center'
+  | 'right'
+  | 'pull'
+  | 'opposite';
+
+/**
+ * 打球種別
+ */
+export type BattedBallType =
+  | 'ground_ball'
+  | 'line_drive'
+  | 'fly_ball'
+  | 'popup';
 
 /**
  * 打席ログ
@@ -582,14 +649,14 @@ export interface PlateAppearance {
   /** 打席ID */
   pa_id: string;
 
-  /** 選手ID */
-  player_id: string;
+  /** 打者ID */
+  player_id: PlayerID;
 
   /** 試合ID */
-  game_id: string;
+  game_id: GameID;
 
   /** 日付 */
-  date: string;
+  date: DateISO;
 
   /** イニング */
   inning: number;
@@ -601,7 +668,7 @@ export interface PlateAppearance {
   batting_order: number;
 
   /** 対戦投手ID */
-  pitcher_id: string;
+  pitcher_id: PlayerID;
 
   /** 対戦投手名 */
   pitcher_name: string;
@@ -651,28 +718,32 @@ export interface PlateAppearance {
 }
 
 /**
- * 打席結果の種類
+ * 球種
  */
-export type PAResult =
-  | '単打' | '二塁打' | '三塁打' | '本塁打'
-  | '四球' | '死球' | '三振'
-  | 'ゴロ' | 'フライ' | 'ライナー'
-  | '犠打' | '犠飛'
-  | '併殺' | '失策' | '野選'
-  | '振逃';
+export type PitchType =
+  | 'ストレート'
+  | 'ツーシーム'
+  | 'カットボール'
+  | 'スプリット'
+  | 'スライダー'
+  | 'カーブ'
+  | 'チェンジアップ'
+  | 'シンカー'
+  | 'フォーク'
+  | 'ナックル'
+  | 'スクリュー'
+  | 'その他';
 
 /**
- * 打球方向
+ * 投球結果
  */
-export type HitDirection =
-  | 'left' | 'left_center' | 'center' | 'right_center' | 'right'
-  | 'pull' | 'center' | 'opposite';
-
-/**
- * 打球種別
- */
-export type BattedBallType =
-  | 'ground_ball' | 'line_drive' | 'fly_ball' | 'popup';
+export type PitchResult =
+  | '見逃しストライク'
+  | '空振り'
+  | 'ファウル'
+  | 'ボール'
+  | 'インプレー'
+  | 'デッドボール';
 
 /**
  * 投球ログ
@@ -682,13 +753,13 @@ export interface Pitch {
   pitch_id: string;
 
   /** 投手ID */
-  pitcher_id: string;
+  pitcher_id: PlayerID;
 
   /** 試合ID */
-  game_id: string;
+  game_id: GameID;
 
   /** 日付 */
-  date: string;
+  date: DateISO;
 
   /** イニング */
   inning: number;
@@ -697,7 +768,7 @@ export interface Pitch {
   pa_id: string;
 
   /** 対戦打者ID */
-  batter_id: string;
+  batter_id: PlayerID;
 
   /** 対戦打者名 */
   batter_name: string;
@@ -727,30 +798,6 @@ export interface Pitch {
   pitch_number: number;
 }
 
-// lib/types/player.ts
-export type CompletePlayerData = {
-  // こっちが新しい想定
-  season_stats: ...;
-  meta: ...;
-  // 他のフィールド
-};
-
-
-/**
- * 球種
- */
-export type PitchType =
-  | 'ストレート' | 'ツーシーム' | 'カットボール' | 'スプリット'
-  | 'スライダー' | 'カーブ' | 'チェンジアップ' | 'シンカー'
-  | 'フォーク' | 'ナックル' | 'スクリュー' | 'その他';
-
-/**
- * 投球結果
- */
-export type PitchResult =
-  | '見逃しストライク' | '空振り' | 'ファウル' | 'ボール'
-  | 'インプレー' | 'デッドボール';
-
 // ============================================
 // 6. FARM STATS (ファーム情報)
 // ============================================
@@ -760,13 +807,13 @@ export type PitchResult =
  */
 export interface FarmStats {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 年度 */
   year: number;
 
   /** リーグ */
-  league: 'Eastern' | 'Western';
+  league: Extract<League, 'Eastern' | 'Western'>;
 
   /** 打撃成績（野手の場合） */
   batting?: BattingSeasonStats;
@@ -789,32 +836,32 @@ export interface FarmStats {
  */
 export interface RosterMovement {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 移動タイプ */
   movement_type: 'promotion' | 'demotion';
 
   /** 移動日 */
-  movement_date: string;
+  movement_date: DateISO;
 
   /** 移動元 */
-  from_level: '1軍' | '2軍';
+  from_level: Extract<Level, '1軍' | '2軍'>;
 
   /** 移動先 */
-  to_level: '1軍' | '2軍';
+  to_level: Extract<Level, '1軍' | '2軍'>;
 
   /** 直前10試合の成績（サマリ） */
   stats_before_movement?: {
     games: number;
-    batting?: { AVG: number; OPS: number; };
-    pitching?: { ERA: number; WHIP: number; };
+    batting?: { AVG: number; OPS: number };
+    pitching?: { ERA: number; WHIP: number };
   };
 
   /** 直後10試合の成績（サマリ） */
   stats_after_movement?: {
     games: number;
-    batting?: { AVG: number; OPS: number; };
-    pitching?: { ERA: number; WHIP: number; };
+    batting?: { AVG: number; OPS: number };
+    pitching?: { ERA: number; WHIP: number };
   };
 
   /** 理由 */
@@ -830,7 +877,7 @@ export interface RosterMovement {
  */
 export interface UmpireSplits {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 審判名 */
   umpire_name: string;
@@ -862,7 +909,7 @@ export interface UmpireSplits {
  */
 export interface ParkSplits {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 球場名 */
   park_name: string;
@@ -893,10 +940,10 @@ export interface ParkSplits {
  */
 export interface MatchupSplits {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 対戦相手ID */
-  opponent_id: string;
+  opponent_id: PlayerID;
 
   /** 対戦相手名 */
   opponent_name: string;
@@ -929,7 +976,7 @@ export interface MatchupSplits {
  */
 export interface HandednessSplits {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** 対戦相手の投球腕 */
   pitcher_hand: 'L' | 'R';
@@ -964,7 +1011,7 @@ export interface HandednessSplits {
  */
 export interface PlayerLinks {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** X（Twitter）アカウント */
   twitter_url?: string;
@@ -1002,14 +1049,31 @@ export interface PlayerLinks {
 // ============================================
 
 /**
+ * データソース
+ */
+export interface DataSource {
+  /** ソース名 */
+  name: string;
+
+  /** URL */
+  url?: string;
+
+  /** データタイプ */
+  data_type: string[];
+
+  /** 最終取得日時 */
+  last_fetched?: DateTimeISO;
+}
+
+/**
  * データのメタ情報（透明性のため）
  */
 export interface PlayerDataMeta {
   /** 選手ID */
-  player_id: string;
+  player_id: PlayerID;
 
   /** データ最終更新日時 */
-  last_updated: string; // ISO 8601
+  last_updated: DateTimeISO;
 
   /** データソース一覧 */
   data_sources: DataSource[];
@@ -1031,23 +1095,6 @@ export interface PlayerDataMeta {
 
   /** データバージョン */
   version: string;
-}
-
-/**
- * データソース
- */
-export interface DataSource {
-  /** ソース名 */
-  name: string;
-
-  /** URL */
-  url?: string;
-
-  /** データタイプ */
-  data_type: string[];
-
-  /** 最終取得日時 */
-  last_fetched?: string;
 }
 
 // ============================================
