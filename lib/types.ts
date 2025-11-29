@@ -223,6 +223,15 @@ export type FieldingSeasonStats = {
   drs?: number;
 };
 
+
+// 修正後
+export type StarScore = {
+  // 中身はそのままでOK
+  // total: number;
+  // batting: number;
+  // ...
+};
+
 /**
  * CompletePlayerData は lib/types/player.ts から再エクスポートされます
  * 詳細な型定義は lib/types/player.ts を参照してください
