@@ -216,14 +216,7 @@ export type FieldingSeasonStats = {
 };
 
 /**
- * 1選手分の「完全な」データパッケージ
- * nf3PlayerMapper の返り値・APIレスポンス用
+ * CompletePlayerData は lib/types/player.ts から再エクスポートされます
+ * 詳細な型定義は lib/types/player.ts を参照してください
  */
-export type CompletePlayerData = {
-  profile: PlayerProfile;
-  career?: PlayerCareer;
-  pitchingStats?: PitchingSeasonStats[];
-  battingStats?: BattingSeasonStats[];
-  fieldingStats?: FieldingSeasonStats[];
-};
 
