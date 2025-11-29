@@ -2,13 +2,15 @@
  * nf3データ（背番号_名前形式）を新しい型定義にマッピング
  */
 
+import 'server-only';
+
 import type {
   CompletePlayerData,
   PlayerProfile,
   PlayerCareer,
   PitchingSeasonStats,
   BattingSeasonStats,
-  //PlayerDataMeta,
+  PlayerDataMeta,
   StarScore,
 } from '@/lib/types';
 
@@ -28,23 +30,22 @@ export function mapNF3ToPlayerProfile(data: NF3AllStatsData): PlayerProfile {
   const isPitcher = data.pitcherStats !== null;
 
   return {
-    playerId: `${data.team}_${data.number}_${data.playerName}`,
-    nameKanji: data.playerName,
-    nameKana: "",
-    nameRomaji: "",
-    birthDate: "",
+    player_id: `${data.team}_${data.number}_${data.playerName}`,
+    name_kanji: data.playerName,
+    name_kana: "",
+    name_romaji: "",
+    birth_date: "",
     age: 0,
     throws: data.pitcherStats?.basic_info?.腕 === "右" ? "R" :
             data.pitcherStats?.basic_info?.腕 === "左" ? "L" : "R",
     bats: data.pitcherStats?.basic_info?.席 === "右" ? "R" :
           data.pitcherStats?.basic_info?.席 === "左" ? "L" : "R",
-    primaryPosition: isPitcher ? "P" : "DH",
-    currentTeam: data.team,
-    currentNumber: data.number,
+    primary_position: isPitcher ? "P" : "DH",
+    current_team: data.team,
+    current_number: data.number,
     status: "active",
   };
 }
-
 
 /**
  * nf3データを PlayerCareer にマッピング
@@ -150,37 +151,51 @@ export function generateNF3StarScore(
   }
 
   return {
-  playerId,
-  year: new Date().getFullYear(),
-  totalScore,
-  pitchingScore: isPitcher ? totalScore : undefined,
-  battingScore: !isPitcher ? totalScore : undefined,
-  rank,
-  calculatedAt: new Date().toISOString(),
-  confidence,
-  description,
-};
-
+    player_id: playerId,
+    year: new Date().getFullYear(),
+    total_score: totalScore,
+    pitching_score: isPitcher ? totalScore : undefined,
+    batting_score: !isPitcher ? totalScore : undefined,
+    rank,
+    calculated_at: new Date().toISOString(),
+    confidence,
+    description,
+  };
+}
 
 /**
  * メタ情報を生成
  */
 export function generateNF3PlayerDataMeta(playerId: string): PlayerDataMeta {
   return {
-  playerId,
-  lastUpdated: new Date().toISOString(),
-  dataSources: [
-    {
-      name: "nf3 (Freak)",
-      url: "https://nf3.sakura.ne.jp",
-      dataType: ["詳細成績", "状況別成績", "球種データ"],
-      lastFetched: new Date().toISOString(),
+    player_id: playerId,
+    last_updated: new Date().toISOString(),
+    data_sources: [
+      {
+        name: "nf3 (Freak)",
+        url: "https://nf3.sakura.ne.jp",
+        data_type: ["詳細成績", "状況別成績", "球種データ"],
+        last_fetched: new Date().toISOString(),
+      },
+      {
+        name: "Baseball Data",
+        url: "https://baseballdata.jp",
+        data_type: ["補足データ"],
+        last_fetched: new Date().toISOString(),
+      },
+    ],
+    metrics_definitions: {
+      FIP_definition_url: "/docs/metrics/fip",
+      WAR_definition_url: "/docs/metrics/war",
+      star_score_definition_url: "/docs/metrics/star-score",
     },
-  ],
-  metricsDefinitions: { ... },
-  dataQuality: { ... },
-  version: "2.0.0-nf3",
-};
+    data_quality: {
+      completeness: 0.85,
+      reliability: "high",
+      notes: "nf3からの詳細データを使用。2025シーズンの最新データを反映。",
+    },
+    version: "2.0.0-nf3",
+  };
 }
 
 /**
