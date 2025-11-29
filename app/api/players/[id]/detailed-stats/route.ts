@@ -4,45 +4,48 @@ const VPS_API_URL = process.env.VPS_API_URL || 'http://133.18.115.175:3001';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: playerId } = await params;
+    // 動的パラメータから playerId を取得（URL デコードもしておく）
+    const playerId = decodeURIComponent(params.id);
 
-    // Get query parameters from the request
+    // クエリパラメータを取得
     const searchParams = request.nextUrl.searchParams;
-    const team = searchParams.get('team');
-    const name = searchParams.get('name');
+    const team = searchParams.get('team') ?? undefined;
+    const name = searchParams.get('name') ?? undefined;
 
-    // Build query string for VPS API
-    const queryString = new URLSearchParams({
-      ...(team && { team }),
-      ...(name && { name }),
-    }).toString();
+    // VPS API 向けクエリ文字列を組み立て
+    const vpsQuery = new URLSearchParams();
+    if (team) vpsQuery.set('team', team);
+    if (name) vpsQuery.set('name', name);
 
-    // VPS APIにリクエストを転送
-    const response = await fetch(
-      `${VPS_API_URL}/api/players/${playerId}/detailed-stats${queryString ? `?${queryString}` : ''}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        next: { revalidate: 300 }, // 5分間キャッシュ
-      }
-    );
+    const vpsUrl =
+      `${VPS_API_URL}/api/players/${playerId}/detailed-stats` +
+      (vpsQuery.toString() ? `?${vpsQuery.toString()}` : '');
+
+    const response = await fetch(vpsUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 300 }, // 5分キャッシュ
+    });
 
     if (!response.ok) {
       if (response.status === 404) {
         return NextResponse.json(
           { error: 'Player not found' },
-          { status: 404 }
+          { status: 404 },
         );
       }
-      throw new Error(`VPS API error: ${response.status}`);
+
+      const text = await response.text().catch(() => '');
+      throw new Error(
+        `VPS API error: ${response.status} ${response.statusText} ${text}`,
+      );
     }
 
     const data = await response.json();
-
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching player stats from VPS:', error);
@@ -50,9 +53,9 @@ export async function GET(
     return NextResponse.json(
       {
         error: 'Failed to fetch player detailed stats',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
