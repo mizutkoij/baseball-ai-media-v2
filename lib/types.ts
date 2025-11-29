@@ -1,26 +1,13 @@
 // lib/types.ts
-// ✅ とりあえずビルド通したいなら
-import {
-  PitchingSeasonStats,
-  BattingSeasonStats,
-  StarScore,
-} from '@/lib/types';
-// lib/types.ts
 export type { CompletePlayerData } from './types/player';
 
-
-export type StandingItem = {
-  id: string;          // 追加
-  rank: number;
-  name: string;
-  gamesBack: string;
-  pct: string;
-  color: string;
-  // ほかのフィールド…
-};
-
-
 export type GameStatus = 'scheduled' | 'live' | 'final';
+
+export type Team = {
+  id: string;
+  name: string;
+  shortName: string;
+};
 
 export type Game = {
   id: string;
@@ -35,7 +22,6 @@ export type Game = {
   stadium: string;
 };
 
-// StandingItem は既存のままでOK
 export type StandingItem = {
   league: 'セ・リーグ' | 'パ・リーグ';
   rank: number;
@@ -58,6 +44,13 @@ export type StandingsByLeague = {
   central: StandingItem[];  // セ・リーグ
   pacific: StandingItem[];  // パ・リーグ
 };
+
+// NF3用のプレイヤーメタ情報（暫定定義）
+export type PlayerDataMeta = {
+  // TODO: 必要になったらちゃんと項目を詰める
+  [key: string]: unknown;
+};
+
 
 
 export type Article = {
@@ -230,6 +223,12 @@ export type StarScore = {
   // total: number;
   // batting: number;
   // ...
+};
+
+// NF3用のプレイヤーメタ情報（暫定定義）
+export type PlayerDataMeta = {
+  // TODO: 必要になったらちゃんと項目を詰める
+  [key: string]: unknown;
 };
 
 /**
