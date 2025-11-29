@@ -8,7 +8,7 @@ import type {
   PlayerCareer,
   PitchingSeasonStats,
   BattingSeasonStats,
-  PlayerDataMeta,
+  //PlayerDataMeta,
   StarScore,
 } from '@/lib/types';
 
