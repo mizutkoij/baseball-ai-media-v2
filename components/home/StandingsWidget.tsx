@@ -6,9 +6,8 @@ type Props = {
 };
 
 export function StandingsWidget({ central, pacific }: Props) {
-  // 共通のテーブルレンダリング関数
   const renderTable = (items: StandingItem[], leagueName: string, headerColor: string) => (
-    <div className="flex-1 min-w-[300px]"> {/* min-wを設定してスマホ等での潰れ防止 */}
+    <div className="flex-1 min-w-[300px]">
       <div className={`px-3 py-2 border-b border-gray-200 ${headerColor} text-white rounded-t-sm`}>
         <h3 className="font-bold text-sm">{leagueName}</h3>
       </div>
@@ -24,11 +23,14 @@ export function StandingsWidget({ central, pacific }: Props) {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {items.map((item) => (
-              <tr key={item.team.id} className="hover:bg-gray-50 transition-colors">
+              <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-2 py-2 font-mono text-gray-600 text-center">{item.rank}</td>
                 <td className="px-2 py-2 font-bold text-gray-800 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: item.team.color }}></span>
-                  <span className="truncate">{item.team.name}</span>
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="truncate">{item.name}</span>
                 </td>
                 <td className="px-2 py-2 text-center font-mono text-gray-600">{item.gamesBack}</td>
                 <td className="px-2 py-2 text-center font-mono text-gray-600">{item.pct}</td>
@@ -44,12 +46,11 @@ export function StandingsWidget({ central, pacific }: Props) {
     <div className="w-full">
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-bold text-gray-800 text-lg border-l-4 border-blue-700 pl-3">順位表</h2>
-        <a href="/standings" className="text-xs text-blue-600 hover:underline">詳細 »</a>
+        <a href="/standings" className="text-xs text-blue-600 hover:underline">
+          詳細 »
+        </a>
       </div>
-      
-      {/* md:flex-row でPCでは横並び、
-        スマホでは縦並びになるレスポンシブ対応
-      */}
+
       <div className="flex flex-col md:flex-row gap-4">
         {renderTable(central, 'セ・リーグ', 'bg-green-700')}
         {renderTable(pacific, 'パ・リーグ', 'bg-blue-600')}
